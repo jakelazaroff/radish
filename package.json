@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "radish-farm",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ]
+}

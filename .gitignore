@@ -1,0 +1,10 @@
+# macos
+.DS_Store
+
+# node
+.npmrc
+node_modules
+yarn-error.log
+
+# typescript
+tsconfig.tsbuildinfo

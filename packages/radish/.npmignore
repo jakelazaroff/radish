@@ -1,0 +1,11 @@
+# macos
+.DS_Store
+
+# node
+.npmrc
+yarn-error.log
+tsconfig.tsbuildinfo
+
+# radish
+tsconfig.json
+src

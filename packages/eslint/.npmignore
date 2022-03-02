@@ -1,0 +1,6 @@
+# macos
+.DS_Store
+
+# node
+node_modules
+yarn-error.log

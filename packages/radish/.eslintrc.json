@@ -1,0 +1,16 @@
+{
+  "env": { "node": true },
+  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": { "jsx": true },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "ban-ts-comment": {
+      "ts-ignore": "allow-with-description"
+    }
+  }
+}

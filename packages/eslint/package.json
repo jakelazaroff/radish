@@ -1,0 +1,15 @@
+{
+  "name": "eslint-config-radish",
+  "version": "0.1.0",
+  "main": "./index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.3"
+  },
+  "peerDependencies": {
+    "eslint": "^8.10.0"
+  }
+}

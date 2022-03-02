@@ -1,0 +1,6 @@
+{
+  "name": "@radish/tsconfig",
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "tsconfig.json"
+}
