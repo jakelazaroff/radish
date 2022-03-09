@@ -184,7 +184,7 @@ Radish exposes a `<Head>` component that you can use to set tags in a page's `<h
 ```jsx
 // pages/index.jsx
 
-import { Head } from '@daisy/lib";
+import { Head } from 'radish";
 
 export default function About() {
   return (
