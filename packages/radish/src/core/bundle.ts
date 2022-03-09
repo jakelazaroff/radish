@@ -54,6 +54,7 @@ export async function bundle(options: BundleOptions) {
     write: false,
     bundle: true,
     entryPoints: entry,
+    nodePaths: [SRC],
     outdir: DEST,
     outbase: PAGES,
     format: "esm",
