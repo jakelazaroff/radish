@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import * as http from "node:http";
 import * as path from "node:path";
 
-import chalk from "chalk";
+import * as ansi from "../util/ansi.js";
 
 export interface ServeOptions {
   dir: string;
@@ -23,7 +23,7 @@ export function serve(options: ServeOptions) {
       res.end("Only GET requests are allowed in local development.");
 
       // prettier-ignore
-      console.log(`${chalk.bold(req.method)} ${url.pathname} ${chalk.bold.yellow(405)}`);
+      console.log(`${ansi.bold(req.method)} ${url.pathname} ${ansi.bold(ansi.yellow(405))}`);
       return;
     }
 
@@ -37,7 +37,7 @@ export function serve(options: ServeOptions) {
       res.end(file);
 
       // prettier-ignore
-      console.log(`${chalk.bold("GET")} ${url.pathname} ${chalk.bold.green(200)}`);
+      console.log(`${ansi.bold("GET")} ${url.pathname} ${ansi.bold(ansi.green(200))}`);
     } catch (err) {
       try {
         const body = await fs.promises.readFile(path.join(dir, "404.html"));
@@ -49,7 +49,7 @@ export function serve(options: ServeOptions) {
       }
 
       // prettier-ignore
-      console.log(`${chalk.bold(req.method)} ${url.pathname} ${chalk.bold.yellow(404)}`);
+      console.log(`${ansi.bold(req.method)} ${url.pathname} ${ansi.bold(ansi.yellow(404))}`);
     }
   });
 

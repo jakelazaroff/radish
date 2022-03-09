@@ -7,7 +7,6 @@ import * as process from "node:process";
 // lib
 import esbuild, { OutputFile } from "esbuild";
 import { globby } from "globby";
-import mkdirp from "mkdirp";
 
 // plugins
 import loaders from "./loaders.js";
@@ -103,7 +102,7 @@ async function writeFiles(
   assetDir: string
 ) {
   // create assets dir
-  await mkdirp(assetDir);
+  await fs.promises.mkdir(assetDir, { recursive: true });
   return Promise.all(
     files.map(async file => {
       const filepath = path.parse(file.path);
@@ -140,7 +139,7 @@ async function writePage(file: OutputFile, content: ContentMap, root: string) {
         const dir = path.join(filepath.dir, pathname);
         const html = render(component, { path: pathname });
 
-        await mkdirp(dir);
+        await fs.promises.mkdir(dir, { recursive: true });
         await fs.promises.writeFile(path.join(dir, "index.html"), html);
       })
     );
@@ -156,7 +155,7 @@ async function writePage(file: OutputFile, content: ContentMap, root: string) {
 
     const html = render(component, { path: dir });
 
-    await mkdirp(dir);
+    await fs.promises.mkdir(dir, { recursive: true });
     await fs.promises.writeFile(path.join(dir, name + ".html"), html);
   }
 }

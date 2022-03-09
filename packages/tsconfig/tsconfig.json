@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "composite": true,
     "lib": ["esnext"],
     "skipLibCheck": true,
     "target": "esnext",
 
     // build options
-    "allowJs": true,
     "jsx": "react-jsx",
 
     // module resolution
@@ -29,7 +27,5 @@
     "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  }
 }

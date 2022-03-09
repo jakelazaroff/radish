@@ -3,7 +3,6 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 // lib
-import mkdirp from "mkdirp";
 import esbuild, { Plugin } from "esbuild";
 
 interface Options {
@@ -35,7 +34,7 @@ export const jsPlugin = (options: Options): Plugin => ({
         filename = `${basename}-${hash}.js`;
 
       // write the bundled js to the public directory
-      await mkdirp(options.dest);
+      await fs.promises.mkdir(options.dest, { recursive: true });
       await fs.promises.writeFile(path.join(options.dest, filename), file.text);
 
       // return the path to the bundled js as a text string

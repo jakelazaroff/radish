@@ -2,6 +2,7 @@ import minimist from "minimist";
 import * as n from "narrows";
 
 import { dev, build, lint } from "../core/index.js";
+import * as ansi from "../util/ansi.js";
 
 const validate = n.record({
   _: n.array(n.string),
@@ -58,9 +59,9 @@ function help(command?: string) {
 
   switch (command) {
     case "build": {
-      lines.push(`Usage: radish build [options]\n`);
+      lines.push(`🌱\n`, `${ansi.bold("Usage:")} radish build [options]\n`);
       lines.push(
-        `Options:`,
+        ansi.bold(`Options:`),
         ...formatOptions(
           [`  --src <dir>`, "source directory"],
           [`  --out <dir>`, "build directory"],
@@ -72,9 +73,9 @@ function help(command?: string) {
     }
 
     case "dev": {
-      lines.push(`Usage: radish dev [options]\n`);
+      lines.push(`🌱\n`, `${ansi.bold("Usage:")} radish dev [options]\n`);
       lines.push(
-        `Options:`,
+        ansi.bold(`Options:`),
         ...formatOptions(
           [`  --src <dir>`, "source directory"],
           [`  --out <dir>`, "build directory"],
@@ -86,9 +87,9 @@ function help(command?: string) {
     }
 
     case "lint": {
-      lines.push(`Usage: radish lint [options]\n`);
+      lines.push(`🌱\n`, `${ansi.bold("Usage:")} radish lint [options]\n`);
       lines.push(
-        `Options:`,
+        ansi.bold(`Options:`),
         ...formatOptions(
           [`  --src <dir>`, "source directory"],
           [`  --help`, "display help"]
@@ -98,9 +99,9 @@ function help(command?: string) {
     }
 
     default: {
-      lines.push(`Usage: radish [command] [options]\n`);
+      lines.push(`🌱\n`, `${ansi.bold("Usage:")} radish <command> [options]\n`);
       lines.push(
-        `Commands:`,
+        ansi.bold(`Commands:`),
         ...formatOptions(
           [`  build`, "build site"],
           [`  dev`, "watch site and serve"],
@@ -110,7 +111,7 @@ function help(command?: string) {
       );
 
       lines.push(
-        `Options:`,
+        ansi.bold(`Options:`),
         ...formatOptions(
           [`  --help`, "display help"],
           [`  --version`, "display version"]
