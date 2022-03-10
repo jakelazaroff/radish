@@ -1,6 +1,6 @@
 {
   "name": "plant-radish",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "module": "build/index.js",
   "license": "MIT",
@@ -12,7 +12,8 @@
   },
   "scripts": {
     "clean": "rm -rf build tsconfig.tsbuildinfo",
-    "build": "yarn tsc"
+    "build": "yarn clean && yarn tsc",
+    "prepare": "yarn build"
   },
   "bin": {
     "plant-radish": "./bin/cli.js"
