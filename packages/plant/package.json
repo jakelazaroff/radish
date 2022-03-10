@@ -5,6 +5,12 @@
   "module": "build/index.js",
   "license": "MIT",
   "prettier": "@radish/prettier",
+  "files": [
+    "bin",
+    "build",
+    "template",
+    "template/.gitignore"
+  ],
   "devDependencies": {
     "@radish/prettier": "*",
     "@radish/tsconfig": "*",
