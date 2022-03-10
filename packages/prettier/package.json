@@ -1,0 +1,6 @@
+{
+  "name": "@radish/prettier",
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": ".prettierrc.json"
+}
