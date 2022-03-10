@@ -25,7 +25,7 @@ export default async function init(options: InitOptions) {
   // make sure the directory is empty
   const contents = await fs.promises.readdir(dir);
   if (contents.length) {
-    console.error(`Target folder ${dir} is not empty!`);
+    console.error(`Target folder "${name}" is not empty!`);
     process.exit(1);
   }
 
@@ -61,7 +61,9 @@ export default async function init(options: InitOptions) {
     );
   }
 
-  console.log(`🌱 Radish planted! \`cd\` into "${name}" and start developing!`);
+  console.log(
+    `\n🌱 \u001b[32mRadish planted!\u001b[0m \`cd\` into "${name}" and start developing!`
+  );
 }
 
 /** Copy a list of files or directories from `src` to `dest` */
