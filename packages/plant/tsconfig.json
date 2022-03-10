@@ -1,0 +1,9 @@
+{
+  "extends": "@radish/tsconfig/tsconfig",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build"]
+}

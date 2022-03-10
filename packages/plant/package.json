@@ -1,6 +1,20 @@
 {
   "name": "plant-radish",
   "version": "0.1.0",
-  "main": "index.js",
-  "license": "MIT"
+  "type": "module",
+  "module": "build/index.js",
+  "license": "MIT",
+  "prettier": "@radish/prettier",
+  "devDependencies": {
+    "@radish/prettier": "*",
+    "@radish/tsconfig": "*",
+    "typescript": "^4.6.2"
+  },
+  "scripts": {
+    "clean": "rm -rf build tsconfig.tsbuildinfo",
+    "build": "yarn tsc"
+  },
+  "bin": {
+    "plant-radish": "./bin/cli.js"
+  }
 }

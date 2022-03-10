@@ -3,8 +3,6 @@ import { Head, useContent } from "radish";
 export default function Index() {
   const content = useContent();
 
-  console.log(content);
-
   return (
     <>
       <Head>
