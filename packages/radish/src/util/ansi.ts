@@ -4,7 +4,7 @@ type ColorFn<T extends Primitive | ColorFn<any>> = (arg?: T) =>
   T extends Primitive ? string : ColorFn<any>;
 
 /** Create an ANSI color */
-function fn(seq: string) {
+function fn(seq: number) {
   return <T extends Primitive | ColorFn<any>>(arg?: T): T => {
     // if the argument is a function, prefix that function's return value with the ANSI code
     if (typeof arg === "function")
@@ -15,6 +15,7 @@ function fn(seq: string) {
   };
 }
 
-export const green = fn("32");
-export const yellow = fn("33");
-export const bold = fn("1");
+export const green = fn(32);
+export const yellow = fn(33);
+export const cyan = fn(96);
+export const bold = fn(1);

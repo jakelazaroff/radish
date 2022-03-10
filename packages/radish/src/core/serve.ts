@@ -54,7 +54,7 @@ export function serve(options: ServeOptions) {
   });
 
   // prettier-ignore
-  server.on("listening", () => console.log(`🌐 Listening at localhost:${port}`));
+  server.on("listening", () => console.log(`🌐 Listening at ${ansi.cyan("localhost:"+port)}`));
   server.listen(options.port);
 }
 

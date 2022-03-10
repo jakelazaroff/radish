@@ -1,53 +1,39 @@
-import minimist from "minimist";
-import * as n from "narrows";
-
 import { dev, build, lint } from "../core/index.js";
 import * as ansi from "../util/ansi.js";
+import argv from "../util/argv.js";
 
-const validate = n.record({
-  _: n.array(n.string),
-  src: n.optional(n.string),
-  out: n.optional(n.string),
-  public: n.optional(n.string),
-  port: n.optional(n.number),
-  help: n.optional(n.boolean),
-  version: n.optional(n.boolean)
-});
+export default function cli(args: string[], version: string) {
+  const flags = argv(args);
 
-export default function cli(argv: string[], version: string) {
-  const args = minimist(argv);
-
-  if (!validate(args)) throw new Error(`Invalid args.`);
-
-  const [command] = args._;
-  if (args.help) return help(command);
+  const [command] = flags._;
+  if (flags.help) return help(command);
 
   switch (command) {
     case "build": {
       build({
-        src: args.src ?? "./src",
-        dest: args.out ?? "./build",
-        public: args.public ?? "/public"
+        src: flags.src ?? "./src",
+        dest: flags.out ?? "./build",
+        public: flags.public ?? "/public"
       });
       return;
     }
 
     case "dev": {
       dev({
-        src: args.src ?? "./src",
-        dest: args.out ?? "./build",
-        port: args.port
+        src: flags.src ?? "./src",
+        dest: flags.out ?? "./build",
+        port: flags.port
       });
       return;
     }
 
     case "lint": {
-      lint({ src: args.src ?? "./src" });
+      lint({ src: flags.src ?? "./src" });
       return;
     }
 
     default: {
-      if (args.version) return console.log(version);
+      if (flags.version) return console.log(version);
       if (command) console.error(`Unrecognized command "${command}".`);
       help();
     }
