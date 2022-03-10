@@ -60,6 +60,8 @@ export default async function init(options: InitOptions) {
       path.join(dir, "src", "pages", "index.tsx")
     );
   }
+
+  console.log(`🌱 Radish planted! \`cd\` into "${name}" and start developing!`);
 }
 
 /** Copy a list of files or directories from `src` to `dest` */
@@ -76,7 +78,7 @@ function copy(src: string, dest: string, files: string[]): Promise<void>[] {
       return Promise.all(copy(orig, next, contents)).then(() => void 0);
     }
 
-    throw new Error(`File "${orig}" has unkonwn type!`);
+    throw new Error(`File "${orig}" has unknown type!`);
   });
 
   return copies;
