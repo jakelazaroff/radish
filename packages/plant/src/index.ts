@@ -2,20 +2,21 @@
 import * as path from "node:path";
 
 // lib
-import minimist from "minimist";
 
 import init from "./init.js";
+import argv from "./argv.js";
 
-export default function cli(argv: string[], version: string) {
-  const args = minimist(argv);
+export default function cli(args: string[], version: string) {
+  const flags = argv(args);
 
-  const [dir] = args._;
-  if (!dir || args.help) return help();
-  if (args.version) return console.log(version);
+  if (flags.version) return console.log(version);
+
+  const [dir] = flags._;
+  if (!dir || flags.help) return help();
 
   init({
     dir: path.resolve(dir),
-    typescript: Boolean(args.typescript)
+    typescript: Boolean(flags.typescript)
   });
 }
 
