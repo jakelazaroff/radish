@@ -42,7 +42,14 @@ export default async function init(options: InitOptions) {
     .then(json => JSON.stringify(json, null, 2))
     .then(file => fs.promises.writeFile(path.join(dir, "package.json"), file));
 
-  const toCopy = [".eslintrc.json", ".gitignore", "radish.env.d.ts", "src"];
+  // copy .gitignore
+  // (templated version doesn't have a leading dot because npm won't publish it)
+  await fs.promises.copyFile(
+    path.join(TEMPLATE, "gitignore"),
+    path.join(dir, ".gitignore")
+  );
+
+  const toCopy = [".eslintrc.json", "radish.env.d.ts", "src"];
   if (options.typescript) toCopy.push("tsconfig.json");
 
   await Promise.all(copy(TEMPLATE, dir, toCopy));

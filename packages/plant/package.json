@@ -8,8 +8,7 @@
   "files": [
     "bin",
     "build",
-    "template",
-    "template/.gitignore"
+    "template"
   ],
   "devDependencies": {
     "@radish/prettier": "*",
