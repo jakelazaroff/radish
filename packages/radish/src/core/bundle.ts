@@ -33,6 +33,7 @@ export interface BundleOptions {
   dest: string;
   public: string;
   watch?: boolean;
+  serviceWorker?: boolean;
 }
 
 export async function bundle(options: BundleOptions) {
@@ -41,6 +42,7 @@ export async function bundle(options: BundleOptions) {
   const SRC = path.resolve(options.src);
   const DEST = path.resolve(options.dest);
   const PUBLIC = options.public;
+  const SERVICE_WORKER = Boolean(options.serviceWorker);
 
   const PAGES = path.join(SRC, PAGES_DIR);
   const CONTENT = path.join(SRC, CONTENT_DIR);
@@ -80,7 +82,12 @@ export async function bundle(options: BundleOptions) {
         const output = result.outputFiles ?? [];
         const files = [...output, ...cssDeps.values()];
         const content = contentMap();
-        writeFiles(files, content, DEST, ASSETS);
+        writeFiles(files, {
+          content,
+          buildDir: DEST,
+          assetDir: ASSETS,
+          serviceWorker: SERVICE_WORKER
+        });
       }
     }
   });
@@ -88,43 +95,58 @@ export async function bundle(options: BundleOptions) {
   // write the files to the filesystem
   const files = [...result.outputFiles, ...cssDeps.values()];
   const content = contentMap();
-  await writeFiles(files, content, DEST, ASSETS);
+  await writeFiles(files, {
+    content,
+    buildDir: DEST,
+    assetDir: ASSETS,
+    serviceWorker: SERVICE_WORKER
+  });
+  await buildServiceWorker(DEST, PUBLIC);
 
   const end = process.hrtime.bigint();
   const ms = Number((end - start) / 1_000_000n);
   console.log(`🏗  Built in ${ms / 1000}s`);
 }
 
-async function writeFiles(
-  files: OutputFile[],
-  content: ContentMap,
-  buildDir: string,
-  assetDir: string
-) {
+interface WriteOptions {
+  content: ContentMap;
+  buildDir: string;
+  assetDir: string;
+  serviceWorker: boolean;
+}
+
+async function writeFiles(files: OutputFile[], options: WriteOptions) {
+  const { content, assetDir, buildDir, serviceWorker } = options;
+
   // create assets dir
   await fs.promises.mkdir(assetDir, { recursive: true });
   return Promise.all(
     files.map(async file => {
       const filepath = path.parse(file.path);
-      if (filepath.ext !== ".js") return writeAsset(file, assetDir);
+      if (filepath.ext !== ".js")
+        return await fs.promises.writeFile(
+          path.join(assetDir, filepath.base),
+          file.contents
+        );
 
       // bundled JS files are treated as assets
       if (/\.bundle-\w+\.js$/.test(filepath.base))
-        return writeAsset(file, assetDir);
+        await fs.promises.writeFile(
+          path.join(assetDir, filepath.base),
+          file.contents
+        );
 
-      return writePage(file, content, buildDir);
+      return writePage(file, content, buildDir, serviceWorker);
     })
   );
 }
 
-async function writeAsset(file: OutputFile, dir: string) {
-  const filepath = path.parse(file.path);
-
-  const contents = filepath.ext === ".css" ? file.text : file.contents;
-  await fs.promises.writeFile(path.join(dir, filepath.base), contents);
-}
-
-async function writePage(file: OutputFile, content: ContentMap, root: string) {
+async function writePage(
+  file: OutputFile,
+  content: ContentMap,
+  root: string,
+  serviceWorker: boolean
+) {
   const filepath = path.parse(file.path);
 
   // compile the component into an ES module
@@ -153,9 +175,19 @@ async function writePage(file: OutputFile, content: ContentMap, root: string) {
       ? path.join(filepath.dir, filepath.name)
       : filepath.dir;
 
-    const html = render(component, { path: dir });
+    const html = render(component, { path: dir, serviceWorker });
 
     await fs.promises.mkdir(dir, { recursive: true });
     await fs.promises.writeFile(path.join(dir, name + ".html"), html);
   }
+}
+
+async function buildServiceWorker(dest: string, publicPath: string) {
+  return esbuild.build({
+    bundle: true,
+    outfile: path.join(dest, "sw.js"),
+    entryPoints: [path.resolve(__dirname, "../lib/sw.js")],
+    format: "esm",
+    define: { PUBLIC_PATH: JSON.stringify(publicPath) }
+  });
 }

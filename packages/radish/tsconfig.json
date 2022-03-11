@@ -1,6 +1,7 @@
 {
   "extends": "@radish/tsconfig/tsconfig",
   "compilerOptions": {
+    "lib": ["esnext", "webworker", "dom.iterable"],
     "outDir": "build",
     "allowJs": true
   },

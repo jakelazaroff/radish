@@ -6,6 +6,7 @@
 
     // build options
     "jsx": "react-jsx",
+    "removeComments": true,
 
     // module resolution
     "module": "es2020",

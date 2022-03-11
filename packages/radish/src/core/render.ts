@@ -6,7 +6,10 @@ import type { HelmetServerState } from "react-helmet-async";
 
 import type { Page } from "./types";
 
-export default function render(component: Page, props: { path: string }) {
+export default function render(
+  component: Page,
+  props: { path: string; serviceWorker?: boolean }
+) {
   try {
     const markup = renderToStaticMarkup(
       createElement(component.default, props)
@@ -40,10 +43,10 @@ function html(markup: string, helmet: HelmetServerState) {
     `<!DOCTYPE html>`,
     `<html${html.length ? " " + html : ""}>`,
     `  <head>`,
-    helmet.title.toString().replace(rh, ""),
-    helmet.meta.toString().replace(rh, ""),
-    helmet.link.toString().replace(rh, ""),
-    helmet.script.toString().replace(rh, ""),
+    `    ` + helmet.title.toString().replace(rh, ""),
+    `    ` + helmet.meta.toString().replace(rh, ""),
+    `    ` + helmet.link.toString().replace(rh, ""),
+    `    ` + helmet.script.toString().replace(rh, ""),
     `  </head>`,
     `  <body ${body.length ? " " + body : ""}>`,
     markup,

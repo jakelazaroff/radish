@@ -31,7 +31,7 @@ export const pagePlugin = (options: PageOptions): Plugin => ({
         `import Component, * as page from "${args.path}";`,
         `export default function Page(props) {`,
         `  return (`,
-        `    <Document>`,
+        `    <Document {...props}>`,
         `      <Component {...props} />`,
         `    </Document>`,
         `  );`,

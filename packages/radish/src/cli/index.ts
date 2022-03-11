@@ -13,7 +13,8 @@ export default function cli(args: string[], version: string) {
       build({
         src: flags.src ?? "./src",
         dest: flags.out ?? "./build",
-        public: flags.public ?? "/public"
+        public: flags.public ?? "/public",
+        serviceWorker: flags["service-worker"] !== "disabled"
       });
       return;
     }
@@ -51,7 +52,8 @@ function help(command?: string) {
         ...formatOptions(
           [`  --src <dir>`, "source directory"],
           [`  --out <dir>`, "build directory"],
-          [`  --public <path>`, "public path"],
+          [`  --public <path>`, "URL prefix at which assets are available"],
+          [`  --service-worker`, "generate a service worker (beta)"],
           [`  --help`, "display help"]
         )
       );
