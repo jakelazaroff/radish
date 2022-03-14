@@ -41,29 +41,31 @@ self.addEventListener("fetch", event => {
       const expires = Number(cached?.headers.get(SW_CACHE_KEY));
       if (cached && new Date().getTime() / 1000 < expires) return cached;
 
-      const fresh = fetch(event.request).then(res => {
-        if (!res || res.status !== 200 || res.type !== "basic") return res;
-        const control = cacheControl(res.headers.get("cache-control") || "");
+      const fresh = fetch(event.request)
+        .then(res => {
+          if (!res || res.status !== 200 || res.type !== "basic") return res;
+          const control = cacheControl(res.headers.get("cache-control") || "");
 
-        if (control["no-store"]) return res;
+          if (control["no-store"]) return res;
 
-        // calculate the new expiry time
-        const url = new URL(event.request.url);
-        const defaultMaxAge = url.pathname.startsWith(PUBLIC_PATH)
-          ? DEFAULT_PUBLIC_MAX_AGE
-          : DEFAULT_MAX_AGE;
-        const maxAge = control["max-age"] ?? defaultMaxAge,
-          expires = Math.trunc(new Date().getTime() / 1000) + maxAge;
+          // calculate the new expiry time
+          const url = new URL(event.request.url);
+          const defaultMaxAge = url.pathname.startsWith(PUBLIC_PATH)
+            ? DEFAULT_PUBLIC_MAX_AGE
+            : DEFAULT_MAX_AGE;
+          const maxAge = control["max-age"] ?? defaultMaxAge,
+            expires = Math.trunc(new Date().getTime() / 1000) + maxAge;
 
-        // clone and cache the response
-        const clone = res.clone();
-        const headers = [...clone.headers, [SW_CACHE_KEY, "" + expires]];
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request.url, new Response(clone.body, { headers }));
-        });
+          // clone and cache the response
+          const clone = res.clone();
+          const headers = [...clone.headers, [SW_CACHE_KEY, "" + expires]];
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request.url, new Response(clone.body, { headers }));
+          });
 
-        return res;
-      });
+          return res;
+        })
+        .catch(() => cached || new Response("Page not available."));
 
       return fresh;
     })
