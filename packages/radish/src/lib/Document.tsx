@@ -17,6 +17,7 @@ export default function Document(props: Props) {
   return (
     <HeadProvider>
       <Head>
+        <meta charSet="utf-8" />
         <link rel="stylesheet" href={style} />
         {serviceWorker ? (
           <>
