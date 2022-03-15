@@ -1,0 +1,119 @@
+@import "./reset.css";
+@import "./fonts.css";
+@import "./syntax.css";
+
+:root {
+  --ms-0: 1.8rem;
+  --ms-1: calc(var(--ms-0) * 1.5);
+  --ms-2: calc(var(--ms-1) * 1.5);
+  --ms-3: calc(var(--ms-2) * 1.5);
+  --ms-4: calc(var(--ms-3) * 1.5);
+  --ms-5: calc(var(--ms-4) * 1.5);
+  --font-body: "Grandstander";
+  --font-monospace: "Odudo Mono";
+
+  --color-logo: #ff1053;
+  --color-background: #fcf9ed;
+  --color-surface: #eae3cd;
+  --color-main-text: #222244;
+  --color-primary: var(--color-logo);
+
+  --blob-1: url("images/blob1-day.svg");
+  --blob-2: url("images/blob2-day.svg");
+  --blob-3: url("images/blob3-day.svg");
+}
+
+/* @supports (color: color(display-p3 1 0 0)) {
+  :root {
+    --color-logo: color(display-p3 1 0.06 0.32 / 1);
+  }
+} */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    -webkit-font-smoothing: antialiased;
+    --color-background: #000022;
+    --color-surface: #222244;
+    --color-main-text: #fcf9ed;
+    --color-primary: #9381ff;
+
+    --blob-1: url("images/blob1-night.svg");
+    --blob-2: url("images/blob2-night.svg");
+    --blob-3: url("images/blob3-night.svg");
+  }
+}
+
+:root {
+  background-color: var(--color-background);
+}
+
+body {
+  font-size: var(--ms-0);
+  font-family: var(--font-body);
+  color: var(--color-main-text);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration-thickness: 0.2rem;
+}
+
+p,
+pre,
+ol,
+ul {
+  margin-bottom: 1em;
+}
+
+h1 {
+  font-size: var(--ms-3);
+  letter-spacing: -0.1ch;
+  margin-bottom: 0.25em;
+}
+
+h2 {
+  font-size: var(--ms-2);
+  letter-spacing: -0.1ch;
+}
+
+p + h2,
+pre + h2 {
+  margin-top: 1em;
+}
+
+code {
+  font-family: var(--font-monospace);
+  font-weight: 600;
+  background-color: var(--color-surface);
+  padding: 0.2rem 1rem 0.4rem;
+  border-radius: 2rem;
+}
+
+pre > code {
+  display: block;
+  font-weight: 400;
+  padding: 0;
+  border-width: 2.4rem;
+  border-style: solid;
+  border-image: var(--blob-1) 25% 10% fill stretch;
+  border-radius: 0;
+  background-color: transparent !important;
+}
+
+pre:nth-child(2n) > code {
+  border-image-source: var(--blob-2);
+}
+
+pre:nth-child(3n) > code {
+  border-image-source: var(--blob-3);
+}
+
+svg [fill] {
+  fill: currentColor;
+}

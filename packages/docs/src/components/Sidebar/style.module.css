@@ -1,0 +1,59 @@
+.logo {
+  display: block;
+  height: 6rem;
+  width: 17.5rem;
+  background: url("images/wordmark.svg") no-repeat;
+  background-size: contain;
+  text-indent: -999rem;
+  margin-bottom: 4rem;
+}
+
+.section {
+  margin-top: 1.2em;
+}
+
+.sectionTitle {
+  font-weight: 900;
+  letter-spacing: -0.1ch;
+  margin-top: 1em;
+}
+
+.link {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  font-weight: 400;
+  letter-spacing: -0.1ch;
+  text-decoration: none;
+}
+
+.link.active {
+  font-weight: 900;
+  cursor: default;
+}
+
+.link::after {
+  content: "";
+  margin-top: -0.6rem;
+}
+
+.link.active::after {
+  display: block;
+  width: 1.6rem;
+  height: 2.2rem;
+  background: url("./bullet.svg") center no-repeat;
+}
+
+.navItem:nth-child(2n + 1) > .link::after {
+  transform: rotate(12deg);
+}
+.navItem:nth-child(3n + 2) > .link::after {
+  transform: rotate(-8deg);
+}
+.navItem:nth-child(5n + 3) > .link::after {
+  transform: rotate(16deg);
+}
+.navItem:nth-child(7n + 5) > .link::after {
+  transform: rotate(-4deg);
+}

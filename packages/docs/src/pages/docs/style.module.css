@@ -1,0 +1,55 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  padding: 4rem;
+}
+
+.content {
+  padding: 4rem;
+}
+
+.neighbors {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin-top: 7.2rem;
+}
+
+.neighbor.next {
+  margin-left: auto;
+}
+
+.neighbor.prev {
+  margin-right: auto;
+}
+
+.neighborLink {
+  display: block;
+  text-decoration: none;
+  font-size: var(--ms-1);
+}
+
+.neighborLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #999;
+  font-weight: 400;
+  font-size: var(--ms-0);
+  line-height: var(--ms-0);
+}
+
+.neighbor.prev .neighborLabel {
+  justify-content: flex-start;
+}
+
+.neighbor.next .neighborLabel {
+  justify-content: flex-end;
+}

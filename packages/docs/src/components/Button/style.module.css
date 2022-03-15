@@ -1,0 +1,24 @@
+.button {
+  display: inline-block;
+  position: relative;
+  color: var(--color-background);
+  text-decoration: none;
+  font-size: var(--ms-1);
+  letter-spacing: -0.1ch;
+  height: 6rem;
+  line-height: 6.6rem;
+  padding: 0 3.6rem;
+}
+
+.button::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-width: 3rem;
+  border-style: solid;
+  border-image: url("./border.svg") 50% 16% fill stretch;
+  z-index: -1;
+}

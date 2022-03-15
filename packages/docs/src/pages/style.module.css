@@ -1,0 +1,43 @@
+.header {
+  margin: 9.6rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  display: block;
+  height: 18rem;
+  width: 50rem;
+  background: url("images/logo.svg") no-repeat;
+  background-size: contain;
+  text-indent: -999rem;
+  margin-bottom: 2.4rem;
+}
+
+.subtitle {
+  font-size: 2.4rem;
+  text-align: center;
+  margin-bottom: 9.6rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.feature {
+  border-width: 2.4rem;
+  border-style: solid;
+  border-image: var(--blob-1) 25% 10% fill stretch;
+}
+
+.feature:nth-child(2n + 1) {
+  border-image-source: var(--blob-2);
+}
+
+.featureTitle {
+  font-size: var(--ms-1);
+  font-weight: 900;
+}

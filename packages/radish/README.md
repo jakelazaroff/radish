@@ -52,7 +52,7 @@ The `content` folder contains data that you can use in your pages. Radish suppor
 
 Markdown content uses [MDX](https://mdxjs.com), so you can import other React components.
 
-```mdx
+```md
 ---
 # content/about.mdx
 title: All about me!
