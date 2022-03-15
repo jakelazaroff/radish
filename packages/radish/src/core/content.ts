@@ -27,14 +27,16 @@ export const contentMap = () => {
 
   for (const [file, matter] of cache) {
     // split the path into an array of each segment
-    const dirs = file.split(path.sep),
-      last = dirs.at(-1);
+    const dirs = file.split(path.sep);
 
     // set the front matter in the map at the nested path
     // e.g. if the path is /blog/one, should be set at map["blog"]["one"]
     let current = map;
-    for (const dir of dirs) {
-      if (dir === last) current[dir] = matter;
+    for (let i = 0; i < dirs.length; i++) {
+      const dir = dirs[i];
+      if (dir === undefined) break;
+
+      if (i === dirs.length - 1) current[dir] = matter;
       else current[dir] ??= {};
       current = current[dir];
     }
