@@ -8,7 +8,7 @@ import type { Page } from "./types";
 
 export default function render(
   component: Page,
-  props: { path: string; serviceWorker?: boolean }
+  props: { path: string; serviceWorker?: boolean; websocket?: number }
 ) {
   try {
     const markup = renderToStaticMarkup(

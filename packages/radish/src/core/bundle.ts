@@ -34,6 +34,8 @@ export interface BundleOptions {
   public: string;
   watch?: boolean;
   serviceWorker?: boolean;
+  websocket?: number;
+  onRebuild?(): void;
 }
 
 export async function bundle(options: BundleOptions) {
@@ -72,7 +74,7 @@ export async function bundle(options: BundleOptions) {
 
     incremental: options.watch,
     watch: options.watch && {
-      onRebuild(error, result) {
+      async onRebuild(error, result) {
         if (error) return console.error("Watch build failed:", error);
         if (!result) {
           return console.error("No result returned from watch build.");
@@ -82,12 +84,14 @@ export async function bundle(options: BundleOptions) {
         const output = result.outputFiles ?? [];
         const files = [...output, ...cssDeps.values()];
         const content = contentMap();
-        writeFiles(files, {
+        await writeFiles(files, {
           content,
           buildDir: DEST,
           assetDir: ASSETS,
-          serviceWorker: SERVICE_WORKER
+          serviceWorker: SERVICE_WORKER,
+          websocket: options.websocket
         });
+        options.onRebuild?.();
       }
     }
   });
@@ -99,7 +103,8 @@ export async function bundle(options: BundleOptions) {
     content,
     buildDir: DEST,
     assetDir: ASSETS,
-    serviceWorker: SERVICE_WORKER
+    serviceWorker: SERVICE_WORKER,
+    websocket: options.websocket
   });
   await buildServiceWorker(DEST, PUBLIC);
 
@@ -113,10 +118,11 @@ interface WriteOptions {
   buildDir: string;
   assetDir: string;
   serviceWorker: boolean;
+  websocket?: number;
 }
 
 async function writeFiles(files: OutputFile[], options: WriteOptions) {
-  const { content, assetDir, buildDir, serviceWorker } = options;
+  const { content, assetDir, buildDir, serviceWorker, websocket } = options;
 
   // create assets dir
   await fs.promises.mkdir(assetDir, { recursive: true });
@@ -136,7 +142,7 @@ async function writeFiles(files: OutputFile[], options: WriteOptions) {
           file.contents
         );
 
-      return writePage(file, content, buildDir, serviceWorker);
+      return writePage(file, content, buildDir, serviceWorker, websocket);
     })
   );
 }
@@ -145,7 +151,8 @@ async function writePage(
   file: OutputFile,
   content: ContentMap,
   root: string,
-  serviceWorker: boolean
+  serviceWorker: boolean,
+  websocket?: number
 ) {
   const filepath = path.parse(file.path);
 
@@ -159,7 +166,11 @@ async function writePage(
     await Promise.all(
       [...paths].map(async pathname => {
         const dir = path.join(filepath.dir, pathname);
-        const html = render(component, { path: pathname });
+        const html = render(component, {
+          path: pathname,
+          serviceWorker,
+          websocket
+        });
 
         await fs.promises.mkdir(dir, { recursive: true });
         await fs.promises.writeFile(path.join(dir, "index.html"), html);
@@ -175,7 +186,7 @@ async function writePage(
       ? path.join(filepath.dir, filepath.name)
       : filepath.dir;
 
-    const html = render(component, { path: dir, serviceWorker });
+    const html = render(component, { path: dir, serviceWorker, websocket });
 
     await fs.promises.mkdir(dir, { recursive: true });
     await fs.promises.writeFile(path.join(dir, name + ".html"), html);

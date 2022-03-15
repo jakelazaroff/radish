@@ -4,6 +4,7 @@ import * as child from "node:child_process";
 
 import { bundle, BundleOptions } from "./bundle.js";
 import { serve } from "./serve.js";
+import { websocket } from "./websocket";
 
 export async function build(options: BundleOptions) {
   const src = path.resolve(options.src);
@@ -22,8 +23,17 @@ export async function dev(options: DevOptions) {
   const src = path.resolve(options.src);
   const dest = path.resolve(options.dest);
 
-  await bundle({ src, dest, public: "/public", watch: true });
-  serve({ dir: dest, port: options.port ?? 8000 });
+  const port = options.port ?? 8000;
+  const ws = websocket({ port: port + 1 });
+  await bundle({
+    src,
+    dest,
+    public: "/public",
+    watch: true,
+    websocket: port + 1,
+    onRebuild: ws.refresh
+  });
+  serve({ dir: dest, port });
 }
 
 interface LintOptions {

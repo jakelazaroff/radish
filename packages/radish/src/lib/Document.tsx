@@ -9,22 +9,19 @@ import style from "styles/style.css";
 interface Props {
   children: ReactNode;
   serviceWorker?: boolean;
+  websocket?: number;
 }
 
 export default function Document(props: Props) {
-  const { serviceWorker, children } = props;
+  const { children, serviceWorker, websocket } = props;
 
   return (
     <HeadProvider>
       <Head>
         <meta charSet="utf-8" />
         <link rel="stylesheet" href={style} />
-        {serviceWorker ? (
-          <>
-            <meta name="test" content="asdf" />
-            <script>{sw}</script>
-          </>
-        ) : null}
+        {serviceWorker ? <script>{sw}</script> : null}
+        {websocket ? <script>{ws(websocket)}</script> : null}
       </Head>
       {children}
     </HeadProvider>
@@ -40,3 +37,12 @@ if ("serviceWorker" in navigator) {
       .catch(error => console.error("Couldn't load service worker", error));
   });
 }`.trim();
+
+const ws = (port: number) => {
+  return `
+const ws = new WebSocket("ws://localhost:${port}");
+ws.onmessage = msg => {
+  const data = JSON.parse(msg.data);
+  if (data.type === "refresh") location.reload();
+}`.trim();
+};
