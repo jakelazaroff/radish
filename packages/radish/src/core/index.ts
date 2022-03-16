@@ -4,7 +4,7 @@ import * as child from "node:child_process";
 
 import { bundle, BundleOptions } from "./bundle.js";
 import { serve } from "./serve.js";
-import { websocket } from "./websocket";
+import { websocket } from "./websocket.js";
 
 export async function build(options: BundleOptions) {
   const src = path.resolve(options.src);
