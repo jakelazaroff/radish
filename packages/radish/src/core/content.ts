@@ -9,6 +9,7 @@ import grayMatter from "gray-matter";
 import { compile as compileMdx } from "@mdx-js/mdx";
 import remarkFrontmatter from "remark-frontmatter";
 import { remarkMdxFrontmatter } from "remark-mdx-frontmatter";
+import rehypeHighlight from "rehype-highlight";
 import toml from "toml";
 import yaml from "js-yaml";
 
@@ -177,6 +178,7 @@ export const contentPlugin = (options: Options): Plugin => ({
 
       const file = await compileMdx(md, {
         jsx: true,
+        rehypePlugins: [rehypeHighlight],
         remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter]
       });
       return { contents: file.value, loader: "jsx" };
