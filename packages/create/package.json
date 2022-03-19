@@ -1,5 +1,5 @@
 {
-  "name": "plant-radish",
+  "name": "create-radish",
   "version": "0.1.9",
   "type": "module",
   "module": "build/index.js",
@@ -21,6 +21,6 @@
     "prepare": "yarn build"
   },
   "bin": {
-    "plant-radish": "./bin/cli.js"
+    "create-radish": "./bin/cli.js"
   }
 }

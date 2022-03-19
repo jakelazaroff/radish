@@ -23,7 +23,7 @@ export default function cli(args: string[], version: string) {
 function help() {
   const lines: string[] = [];
 
-  lines.push(`🌱\n`, `Usage: plant-radish <dir> [options]\n`);
+  lines.push(`🌱\n`, `Usage: create-radish <dir> [options]\n`);
   lines.push(
     `Options:`,
     ...formatOptions(
