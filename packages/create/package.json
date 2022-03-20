@@ -4,6 +4,7 @@
   "type": "module",
   "module": "build/index.js",
   "license": "MIT",
+  "repository": "git://gitlab.com/jakelazaroff/radish.git",
   "prettier": "@radish/prettier",
   "files": [
     "bin",
