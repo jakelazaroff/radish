@@ -36,7 +36,11 @@ export default async function init(options: InitOptions) {
     .then(string => JSON.parse(string))
     .then(json => {
       let cfg = { ...json, name };
-      if (!options.typescript) delete cfg.devDependencies.typescript;
+      if (!options.typescript) {
+        delete cfg.devDependencies["@types/react"];
+        delete cfg.devDependencies["@types/react-dom"];
+        delete cfg.devDependencies["typescript"];
+      }
       return cfg;
     })
     .then(json => JSON.stringify(json, null, 2))
