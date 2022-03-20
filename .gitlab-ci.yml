@@ -1,0 +1,18 @@
+image: node:lts
+
+pages:
+  script:
+    - yarn
+    - cd packages/radish
+    - yarn
+    - cd ../docs
+    - yarn build --out ../../public --public /radish/public
+  artifacts:
+    paths:
+      - public
+  cache:
+    paths:
+      - node_modules
+    key: project
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
