@@ -64,7 +64,8 @@ function transform(filename: string, code: Buffer) {
     sourceMap: false,
     minify: false,
     cssModules: true,
-    drafts: { nesting: true, customMedia: true }
+    drafts: { nesting: true, customMedia: true },
+    targets: { firefox: 98 }
   });
 }
 
