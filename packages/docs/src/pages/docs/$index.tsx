@@ -1,7 +1,8 @@
 // lib
 import clsx from "clsx";
-import { Head, Paths, ResourcePageProps } from "radish";
+import type { Paths, ResourcePageProps } from "radish";
 
+import Head from "components/Head";
 import Sidebar from "components/Sidebar";
 import useContent, { usePages, Content } from "hooks/useContent";
 
@@ -29,10 +30,7 @@ export default function Index(props: ResourcePageProps) {
 
   return (
     <div className={css.wrapper}>
-      <Head>
-        <meta charSet="utf-8" />
-        <title>Radish</title>
-      </Head>
+      <Head title={`${page.title} | Radish`} />
       <aside className={css.sidebar}>
         <Sidebar section={section} slug={slug} />
       </aside>

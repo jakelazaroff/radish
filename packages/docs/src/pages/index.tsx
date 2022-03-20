@@ -1,7 +1,7 @@
 // lib
-import { Head } from "radish";
 import { useSections, usePages } from "hooks/useContent";
 
+import Head from "components/Head";
 import Layout from "components/Layout";
 import Button from "components/Button";
 
@@ -16,10 +16,7 @@ export default function Index() {
 
   return (
     <Layout>
-      <Head>
-        <meta charSet="utf-8" />
-        <title>Radish</title>
-      </Head>
+      <Head title="Radish | a delightful static site generator" />
 
       <header className={css.header}>
         <h1 className={css.logo}>Radish</h1>
