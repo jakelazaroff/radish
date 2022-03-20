@@ -6,7 +6,7 @@
   "prettier": "@radish/prettier",
   "dependencies": {
     "clsx": "^1.1.1",
-    "radish": "^0.1.9",
+    "radish": "^0.1.13",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },

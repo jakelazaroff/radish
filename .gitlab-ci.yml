@@ -6,7 +6,7 @@ pages:
     - cd packages/radish
     - yarn
     - cd ../docs
-    - yarn build --out ../../public --public /radish/public
+    - yarn build --out ../../public
   artifacts:
     paths:
       - public
