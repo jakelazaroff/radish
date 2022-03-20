@@ -1,4 +1,6 @@
-# Radish
+<div align="center">
+  <img src="../../images/logo.svg" width="500" height="180" alt="Radish" >
+</div>
 
 Radish is a React-based static site generator that outputs plain HTML and CSS files, without serving any JavaScript to the client.
 

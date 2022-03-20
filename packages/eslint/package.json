@@ -4,6 +4,7 @@
   "main": "./index.js",
   "license": "MIT",
   "repository": "git://gitlab.com/jakelazaroff/radish.git",
+  "homepage": "https://radishjs.com",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",

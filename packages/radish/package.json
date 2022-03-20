@@ -1,11 +1,12 @@
 {
   "name": "radish",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "type": "module",
   "module": "./build/lib/index.js",
   "types": "./build/lib/index.d.ts",
   "license": "MIT",
   "repository": "git://gitlab.com/jakelazaroff/radish.git",
+  "homepage": "https://radishjs.com",
   "engines": {
     "node": ">=16.0.0"
   },
