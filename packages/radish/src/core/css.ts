@@ -4,7 +4,7 @@ import * as path from "node:path";
 
 // lib
 import css from "@parcel/css";
-import esbuild, { OutputFile, Plugin } from "esbuild";
+import type { OutputFile, Plugin, PluginBuild } from "esbuild";
 import { globby } from "globby";
 
 import * as loader from "./loaders.js";
@@ -22,7 +22,7 @@ export const cssPlugin = (options: Options): Plugin => ({
   setup(build) {
     // return the path to the concatenated style.css file for .css files
     build.onLoad({ filter: /\/\w+\.css$/ }, async args => {
-      const r = await bundle(args.path, options);
+      const r = await bundle(build.esbuild, args.path, options);
 
       const deps = r.outputFiles.filter(f => path.extname(f.path) !== ".css"),
         styles = r.outputFiles.filter(f => path.extname(f.path) === ".css");
@@ -69,7 +69,11 @@ function transform(filename: string, code: Buffer) {
   });
 }
 
-async function bundle(file: string, options: Options) {
+async function bundle(
+  esbuild: PluginBuild["esbuild"],
+  file: string,
+  options: Options
+) {
   return esbuild.build({
     write: false,
     bundle: true,
