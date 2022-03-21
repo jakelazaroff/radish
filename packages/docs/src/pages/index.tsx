@@ -1,9 +1,9 @@
 // lib
 import { useSections, usePages } from "hooks/useContent";
 
-import Head from "components/Head";
-import Layout from "components/Layout";
 import Button from "components/Button";
+import Head from "components/Head";
+import Footer from "components/Footer";
 
 import css from "./style.module.css";
 
@@ -15,7 +15,7 @@ export default function Index() {
   if (!page) throw new Error("No page found!");
 
   return (
-    <Layout>
+    <div className={css.wrapper}>
       <Head title="Radish | a delightful static site generator" />
 
       <header className={css.header}>
@@ -72,6 +72,8 @@ export default function Index() {
           </dd>
         </div>
       </dl>
-    </Layout>
+
+      <Footer className={css.footer} />
+    </div>
   );
 }

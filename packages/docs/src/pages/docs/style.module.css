@@ -58,3 +58,8 @@
 .neighbor.next .neighborLabel {
   justify-content: flex-end;
 }
+
+.footer {
+  grid-column: 2;
+  margin: 2.4rem 0;
+}

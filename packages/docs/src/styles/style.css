@@ -9,8 +9,8 @@ html {
   --ms-3: calc(var(--ms-2) * 1.5);
   --ms-4: calc(var(--ms-3) * 1.5);
   --ms-5: calc(var(--ms-4) * 1.5);
-  --font-body: "Grandstander";
-  --font-monospace: "Odudo Mono";
+  --font-body: "Grandstander", sans-serif;
+  --font-monospace: "Odudo Mono", monospace;
 
   --color-logo: #ff1053;
   --color-background: #fcf9ed;

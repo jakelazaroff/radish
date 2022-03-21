@@ -3,6 +3,7 @@ import clsx from "clsx";
 import type { Paths, ResourcePageProps } from "radish";
 
 import Head from "components/Head";
+import Footer from "components/Footer";
 import Sidebar from "components/Sidebar";
 import useContent, { usePages, Content } from "hooks/useContent";
 
@@ -67,6 +68,7 @@ export default function Index(props: ResourcePageProps) {
           ) : null}
         </menu>
       </main>
+      <Footer className={css.footer} />
     </div>
   );
 }

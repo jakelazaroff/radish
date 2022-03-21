@@ -4,16 +4,19 @@
     url("./grandstander.woff2") format("woff2-variations");
   font-weight: 100 1000;
   font-stretch: 25% 151%;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Odudo Mono";
   src: url("./odudomono-regular.woff2") format("woff2");
   font-weight: 400;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Odudo Mono";
   src: url("./odudomono-semibold.woff2") format("woff2");
   font-weight: 600;
+  font-display: swap;
 }
