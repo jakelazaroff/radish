@@ -1,5 +1,4 @@
 // lib
-import prettier from "prettier";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server.js";
 import type { HelmetServerState } from "react-helmet-async";
@@ -36,7 +35,7 @@ export default function render(component: Page, props: PageProps) {
 function html(markup: string, helmet: HelmetServerState) {
   const html = helmet.htmlAttributes.toString();
   const body = helmet.bodyAttributes.toString();
-  const final = [
+  return [
     `<!DOCTYPE html>`,
     `<html${html.length ? " " + html : ""}>`,
     `  <head>`,
@@ -50,8 +49,6 @@ function html(markup: string, helmet: HelmetServerState) {
     `  </body>`,
     `</html>`
   ].join("\n");
-
-  return prettier.format(final, { parser: "html" });
 }
 
 const rh = / data-rh="true"/g;

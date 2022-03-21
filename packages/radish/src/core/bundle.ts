@@ -56,6 +56,7 @@ export async function bundle(options: BundleOptions) {
   const result = await esbuild.build({
     write: false,
     bundle: true,
+    minify: true,
     entryPoints: entry,
     nodePaths: [SRC],
     outdir: DEST,
@@ -219,6 +220,7 @@ async function writePage(
 async function buildServiceWorker(dest: string, publicPath: string) {
   return esbuild.build({
     bundle: true,
+    minify: true,
     outfile: path.join(dest, "sw.js"),
     entryPoints: [path.resolve(__dirname, "../lib/sw.js")],
     format: "esm",

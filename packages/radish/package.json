@@ -18,7 +18,6 @@
     "globby": "^13.1.1",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
-    "prettier": "^2.5.1",
     "react-helmet-async": "^1.2.3",
     "rehype-highlight": "^5.0.2",
     "remark-frontmatter": "^4.0.1",

@@ -2,5 +2,8 @@
   "name": "@radish/prettier",
   "license": "MIT",
   "version": "0.1.0",
-  "main": ".prettierrc.json"
+  "main": ".prettierrc.json",
+  "devDependencies": {
+    "prettier": "^2.6.0"
+  }
 }

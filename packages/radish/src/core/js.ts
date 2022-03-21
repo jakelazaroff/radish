@@ -20,6 +20,7 @@ export const jsPlugin = (options: Options): Plugin => ({
         outdir: options.dest,
         bundle: true,
         write: false,
+        minify: true,
         metafile: true,
         format: "esm"
       });

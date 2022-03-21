@@ -27,11 +27,11 @@ export default function Document(props: Props) {
       <Head>
         <meta charSet="utf-8" />
         <link rel="stylesheet" href={style} />
-        {serviceWorker ? <script>{sw}</script> : null}
-        {websocket ? <script>{ws(websocket)}</script> : null}
         {preload.map((resource, i) => (
           <link key={i} href={resource.href} as={resource.as} />
         ))}
+        {serviceWorker ? <script>{sw}</script> : null}
+        {websocket ? <script>{ws(websocket)}</script> : null}
       </Head>
       {children}
     </HeadProvider>

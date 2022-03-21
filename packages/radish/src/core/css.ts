@@ -77,6 +77,7 @@ async function bundle(
   return esbuild.build({
     write: false,
     bundle: true,
+    minify: true,
     metafile: true,
     entryPoints: [file],
     entryNames: "[name]-[hash]",
