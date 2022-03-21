@@ -2,7 +2,7 @@
 @import "./fonts.css";
 @import "./syntax.css";
 
-:root {
+html {
   --ms-0: 1.8rem;
   --ms-1: calc(var(--ms-0) * 1.5);
   --ms-2: calc(var(--ms-1) * 1.5);
@@ -24,13 +24,25 @@
 }
 
 /* @supports (color: color(display-p3 1 0 0)) {
-  :root {
+  html {
     --color-logo: color(display-p3 1 0.06 0.32 / 1);
   }
 } */
 
+html.night {
+  -webkit-font-smoothing: antialiased;
+  --color-background: #000022;
+  --color-surface: #222244;
+  --color-main-text: #fcf9ed;
+  --color-primary: #9381ff;
+
+  --blob-1: url("images/blob1-night.svg");
+  --blob-2: url("images/blob2-night.svg");
+  --blob-3: url("images/blob3-night.svg");
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  html:not(.day) {
     -webkit-font-smoothing: antialiased;
     --color-background: #000022;
     --color-surface: #222244;
@@ -43,7 +55,7 @@
   }
 }
 
-:root {
+html {
   background-color: var(--color-background);
 }
 

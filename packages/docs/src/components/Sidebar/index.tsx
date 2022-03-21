@@ -4,6 +4,8 @@ import { useSections } from "hooks/useContent";
 import { Fragment } from "react";
 
 import gitlab from "images/gitlab.svg";
+import day from "./day.svg";
+import night from "./night.svg";
 import css from "./style.module.css";
 
 interface Props {
@@ -45,9 +47,34 @@ export default function Sidebar(props: Props) {
         ))}
       </dl>
 
-      <a href="https://gitlab.com/jakelazaroff/radish">
-        <img src={gitlab} alt="GitLab" />
-      </a>
+      <menu className={css.actions}>
+        <li>
+          <a
+            href="https://gitlab.com/jakelazaroff/radish"
+            title="Open GitLab repository"
+          >
+            <img src={gitlab} alt="GitLab" />
+          </a>
+        </li>
+        <li>
+          <button
+            className={clsx(css.toggle, css.day)}
+            data-js="colorscheme"
+            value="day"
+            title="Switch to light mode"
+          >
+            <img className={css.toggleIcon} src={day} alt="Light mode" />
+          </button>
+          <button
+            className={clsx(css.toggle, css.night)}
+            data-js="colorscheme"
+            value="night"
+            title="Switch to dark mode"
+          >
+            <img className={css.toggleIcon} src={night} alt="Dark mode" />
+          </button>
+        </li>
+      </menu>
     </nav>
   );
 }

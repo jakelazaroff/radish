@@ -31,8 +31,12 @@
   border-image-source: url("./ghost-day.svg");
 }
 
+:global(html.night) .button.ghost::before {
+  border-image-source: url("./ghost-night.svg");
+}
+
 @media (prefers-color-scheme: dark) {
-  .button.ghost::before {
+  :global(html:not(.day)) .button.ghost::before {
     border-image-source: url("./ghost-night.svg");
   }
 }

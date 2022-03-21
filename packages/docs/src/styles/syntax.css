@@ -13,8 +13,23 @@ html {
   --highlight-deletion: #c02d2e;
 }
 
+html.night {
+  --highlight-bg: #222244;
+  --highight-color: #ffffff;
+  --highlight-comment: #999999;
+  --highlight-keyword: #88aece;
+  --highlight-attribute: #88aece;
+  --highlight-symbol: #c59bc1;
+  --highlight-namespace: #f08d49;
+  --highlight-variable: #b5bd68;
+  --highlight-literal: #f08d49;
+  --highlight-punctuation: #cccccc;
+  --highlight-addition: #76c490;
+  --highlight-deletion: #de7176;
+}
+
 @media (prefers-color-scheme: dark) {
-  html {
+  html:not(.day) {
     --highlight-bg: #222244;
     --highight-color: #ffffff;
     --highlight-comment: #999999;

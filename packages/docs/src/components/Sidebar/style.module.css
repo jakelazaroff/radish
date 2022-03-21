@@ -57,3 +57,41 @@
 .navItem:nth-child(7n + 5) > .link::after {
   transform: rotate(-4deg);
 }
+
+.actions {
+  list-style: none;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1.6rem;
+  justify-content: start;
+  padding: 0;
+}
+
+.toggle {
+  display: block;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+:global(html.day) .toggle.day,
+:global(html.night) .toggle.night {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(html:not(.day)) .toggle.night {
+    display: none;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :global(html:not(.night)) .toggle.day {
+    display: none;
+  }
+}
+
+.toggleIcon {
+  pointer-events: none;
+}
