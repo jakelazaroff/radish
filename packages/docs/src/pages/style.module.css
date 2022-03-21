@@ -21,6 +21,13 @@
   margin-bottom: 9.6rem;
 }
 
+.ctas {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1.6rem;
+  list-style: none;
+}
+
 .features {
   display: grid;
   grid-template-columns: 1fr 1fr;

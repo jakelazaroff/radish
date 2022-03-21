@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useSections } from "hooks/useContent";
 import { Fragment } from "react";
 
+import gitlab from "images/gitlab.svg";
 import css from "./style.module.css";
 
 interface Props {
@@ -43,7 +44,10 @@ export default function Sidebar(props: Props) {
           </Fragment>
         ))}
       </dl>
-      <menu></menu>
+
+      <a href="https://gitlab.com/jakelazaroff/radish">
+        <img src={gitlab} alt="GitLab" />
+      </a>
     </nav>
   );
 }

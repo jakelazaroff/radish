@@ -19,6 +19,20 @@
   width: 100%;
   border-width: 3rem;
   border-style: solid;
-  border-image: url("./border.svg") 50% 16% fill stretch;
+  border-image: url("./primary.svg") 50% 16% fill stretch;
   z-index: -1;
+}
+
+.button.ghost {
+  color: var(--color-main-text);
+}
+
+.button.ghost::before {
+  border-image-source: url("./ghost-day.svg");
+}
+
+@media (prefers-color-scheme: dark) {
+  .button.ghost::before {
+    border-image-source: url("./ghost-night.svg");
+  }
 }

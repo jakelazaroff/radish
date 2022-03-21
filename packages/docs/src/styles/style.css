@@ -116,6 +116,10 @@ pre:nth-child(3n) > code {
   border-image-source: var(--blob-3);
 }
 
-svg [fill] {
+svg [fill^="#"] {
   fill: currentColor;
+}
+
+svg [stroke^="#"] {
+  stroke: currentColor;
 }

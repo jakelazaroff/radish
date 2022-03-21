@@ -25,7 +25,18 @@ export default function Index() {
           &amp; CSS
         </p>
 
-        <Button href={`/docs/${section[0]}/${page[1]}/`}>Get Started</Button>
+        <menu className={css.ctas}>
+          <li>
+            <Button href={`/docs/${section[0]}/${page[1]}/`}>
+              Get Started
+            </Button>
+          </li>
+          <li>
+            <Button href="https://gitlab.com/jakelazaroff/radish" kind="ghost">
+              GitLab
+            </Button>
+          </li>
+        </menu>
       </header>
 
       <dl className={css.features}>
