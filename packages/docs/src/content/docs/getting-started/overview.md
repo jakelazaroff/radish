@@ -7,7 +7,7 @@ Static site generators like Hugo lack the conveniences of modern web app develop
 
 ## Radish vs. Hugo/Jekyll/Eleventy
 
-[Hugo](https://gohugo.io/), [Jekyll](https://jekyllrb.com/) and [Eleventy](https://www.11ty.dev/) are all "traditional" static site generators: they create static HTML from templates, with no client-side JavaScript by default. There are no comopnents; code is reused with shortcodes or partials, and any logic is written in the templates themselves. There's no CSS modularity; you have to make sure you don't accidentally reuse a class name.
+[Hugo](https://gohugo.io/), [Jekyll](https://jekyllrb.com/) and [Eleventy](https://www.11ty.dev/) are all "traditional" static site generators: they create static HTML from templates, with no client-side JavaScript by default. There are no components; code is reused with shortcodes or partials, and any logic is written in the templates themselves. There's no CSS modularity; you have to make sure you don't accidentally reuse a class name.
 
 Radish also exports static HTML files — but they're rendered by React. In particular, components and CSS modules are helpful for keeping your website maintainable.
 
