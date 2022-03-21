@@ -4,12 +4,9 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server.js";
 import type { HelmetServerState } from "react-helmet-async";
 
-import type { Page } from "./types";
+import type { Page, PageProps } from "./types";
 
-export default function render(
-  component: Page,
-  props: { path: string; serviceWorker?: boolean; websocket?: number }
-) {
+export default function render(component: Page, props: PageProps) {
   try {
     const markup = renderToStaticMarkup(
       createElement(component.default, props)

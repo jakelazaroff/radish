@@ -6,14 +6,21 @@ import { Head, HeadProvider } from "radish";
 // @ts-ignore
 import style from "styles/style.css";
 
-interface Props {
-  children: ReactNode;
+interface Preload {
+  href: string;
+  as: string;
+}
+
+export interface Props {
+  children?: ReactNode;
+  path: string;
   serviceWorker?: boolean;
   websocket?: number;
+  preload?: Preload[];
 }
 
 export default function Document(props: Props) {
-  const { children, serviceWorker, websocket } = props;
+  const { children, serviceWorker, websocket, preload = [] } = props;
 
   return (
     <HeadProvider>
@@ -22,6 +29,9 @@ export default function Document(props: Props) {
         <link rel="stylesheet" href={style} />
         {serviceWorker ? <script>{sw}</script> : null}
         {websocket ? <script>{ws(websocket)}</script> : null}
+        {preload.map((resource, i) => (
+          <link key={i} href={resource.href} as={resource.as} />
+        ))}
       </Head>
       {children}
     </HeadProvider>

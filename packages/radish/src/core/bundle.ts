@@ -88,6 +88,7 @@ export async function bundle(options: BundleOptions) {
           content,
           buildDir: DEST,
           assetDir: ASSETS,
+          publicPath: PUBLIC,
           serviceWorker: SERVICE_WORKER,
           websocket: options.websocket
         });
@@ -103,6 +104,7 @@ export async function bundle(options: BundleOptions) {
     content,
     buildDir: DEST,
     assetDir: ASSETS,
+    publicPath: PUBLIC,
     serviceWorker: SERVICE_WORKER,
     websocket: options.websocket
   });
@@ -117,12 +119,19 @@ interface WriteOptions {
   content: ContentMap;
   buildDir: string;
   assetDir: string;
+  publicPath: string;
   serviceWorker: boolean;
   websocket?: number;
 }
 
 async function writeFiles(files: OutputFile[], options: WriteOptions) {
-  const { content, assetDir, buildDir, serviceWorker, websocket } = options;
+  const { content, assetDir, buildDir, publicPath, serviceWorker, websocket } =
+    options;
+
+  const preload = files
+    .filter(file => /\.(eot|otf|ttf|woff2?|)$/.test(file.path))
+    .map(file => path.relative(assetDir, file.path))
+    .map(file => ({ href: path.join(publicPath, file), as: "font" }));
 
   // create assets dir
   await fs.promises.mkdir(assetDir, { recursive: true });
@@ -142,7 +151,14 @@ async function writeFiles(files: OutputFile[], options: WriteOptions) {
           file.contents
         );
 
-      return writePage(file, content, buildDir, serviceWorker, websocket);
+      return writePage(
+        file,
+        content,
+        buildDir,
+        serviceWorker,
+        preload,
+        websocket
+      );
     })
   );
 }
@@ -152,6 +168,7 @@ async function writePage(
   content: ContentMap,
   root: string,
   serviceWorker: boolean,
+  preload: Array<{ href: string; as: string }>,
   websocket?: number
 ) {
   const filepath = path.parse(file.path);
@@ -169,6 +186,7 @@ async function writePage(
         const html = render(component, {
           path: pathname,
           serviceWorker,
+          preload,
           websocket
         });
 
@@ -186,7 +204,12 @@ async function writePage(
       ? path.join(filepath.dir, filepath.name)
       : filepath.dir;
 
-    const html = render(component, { path: dir, serviceWorker, websocket });
+    const html = render(component, {
+      path: dir,
+      serviceWorker,
+      preload,
+      websocket
+    });
 
     await fs.promises.mkdir(dir, { recursive: true });
     await fs.promises.writeFile(path.join(dir, name + ".html"), html);
