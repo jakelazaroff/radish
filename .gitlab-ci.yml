@@ -1,4 +1,4 @@
-image: node:lts
+image: node:lts-alpine
 
 pages:
   script:
@@ -7,6 +7,9 @@ pages:
     - yarn
     - cd ../docs
     - yarn build --out ../../public
+    - find ../../public -type f -exec gzip --best -f -k {} \;
+    - apk add --no-cache brotli
+    - find ../../public -type f -exec brotli --best -f -k {} \;
   artifacts:
     paths:
       - public
