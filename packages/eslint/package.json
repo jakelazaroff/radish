@@ -3,7 +3,7 @@
   "version": "0.1.5",
   "main": "./index.js",
   "license": "MIT",
-  "repository": "git://gitlab.com/jakelazaroff/radish.git",
+  "repository": "https://gitlab.com/jakelazaroff/radish",
   "homepage": "https://radishjs.com",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.14.0",
