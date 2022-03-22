@@ -108,15 +108,18 @@ code {
   white-space: nowrap;
 }
 
+pre {
+  overflow: auto;
+  border-width: 2.4rem;
+  border-style: solid;
+  border-color: transparent;
+  border-image: var(--blob-1) 25% 10% fill stretch;
+}
+
 pre > code {
   display: block;
   font-weight: 400;
   padding: 0;
-  border-width: 2.4rem;
-  border-style: solid;
-  border-image: var(--blob-1) 25% 10% fill stretch;
-  border-radius: 0;
-  background-color: transparent !important;
   white-space: pre;
 }
 
