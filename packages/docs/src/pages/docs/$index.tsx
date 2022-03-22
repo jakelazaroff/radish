@@ -72,7 +72,7 @@ export default function Index(props: ResourcePageProps) {
         </main>
         <Footer className={css.footer} />
       </div>
-      <script src={js} async />
+      <script src={js} type="module" async />
     </>
   );
 }

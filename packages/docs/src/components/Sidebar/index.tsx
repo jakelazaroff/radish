@@ -30,6 +30,7 @@ export default function Sidebar(props: Props) {
           className={css.toggle}
           title="Open navigation menu"
           data-js="navigation"
+          aria-controls="navigation"
         >
           <Menu />
         </button>
