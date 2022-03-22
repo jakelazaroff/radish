@@ -21,12 +21,15 @@ for (const el of Array.from(themes)) {
   };
 }
 
-const toggle = document.querySelector(`[data-js="navigation"]`)!;
-(toggle as HTMLButtonElement).onclick = () => {
-  const hidden = navigation.getAttribute("aria-hidden") === "true";
-  if (hidden) navigation.setAttribute("aria-hidden", "false");
-  else navigation.setAttribute("aria-hidden", "true");
-};
+const toggles = document.querySelectorAll(`[data-js="navigation"]`)!;
+for (const el of Array.from(toggles)) {
+  const toggle = el as HTMLElement;
+  toggle.onclick = () => {
+    const hidden = navigation.getAttribute("aria-hidden") === "true";
+    if (hidden) navigation.setAttribute("aria-hidden", "false");
+    else navigation.setAttribute("aria-hidden", "true");
+  };
+}
 
 navigation.addEventListener("focusin", e => {
   const focused = e.target as HTMLElement | null;
@@ -37,4 +40,8 @@ navigation.addEventListener("focusout", e => {
   const focused = e.relatedTarget as HTMLElement | null;
   if (focused && !navigation.contains(focused))
     navigation.setAttribute("aria-hidden", "true");
+});
+
+navigation.addEventListener("keydown", e => {
+  if (e.code === "Escape") navigation.setAttribute("aria-hidden", "true");
 });

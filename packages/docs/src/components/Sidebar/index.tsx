@@ -89,6 +89,8 @@ export default function Sidebar(props: Props) {
           </li>
         </menu>
       </nav>
+
+      <div role="presentation" data-js="navigation" className={css.backdrop} />
     </div>
   );
 }

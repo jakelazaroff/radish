@@ -39,6 +39,7 @@
 
 .nav {
   position: fixed;
+  z-index: 1;
   top: 0;
   bottom: 0;
   left: 0;
@@ -50,8 +51,26 @@
   transition: 0.25s transform ease-in-out;
 }
 
+.backdrop {
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #00000099;
+  opacity: 1;
+  transition: 0.25s opacity ease;
+}
+
 .nav[aria-hidden="true"] {
   transform: translateX(-100%);
+}
+
+.nav[aria-hidden="true"] + .backdrop {
+  opacity: 0;
+  pointer-events: none;
 }
 
 @media (min-width: 960px) {
@@ -61,6 +80,11 @@
     transform: none !important;
     box-shadow: none;
     transition: none;
+  }
+
+  .backdrop {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
