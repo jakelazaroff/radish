@@ -13,6 +13,10 @@ export default function DocHead(props: Props) {
   return (
     <Head>
       <meta charSet="utf-8" />
+      <meta
+        httpEquiv="Content-Security-Policy"
+        content="default-src 'self'"
+      ></meta>
       <title>{title}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href={favicon} />

@@ -5,13 +5,10 @@ import type { HelmetServerState } from "react-helmet-async";
 
 import type { Page, PageProps } from "./types";
 
-export default function render(component: Page, props: PageProps) {
+export default function render(page: Page, props: PageProps) {
   try {
-    const markup = renderToStaticMarkup(
-      createElement(component.default, props)
-    );
-
-    return html(markup, component.head.helmet);
+    const markup = renderToStaticMarkup(createElement(page.default, props));
+    return html(markup, page.head.helmet);
   } catch (e: any) {
     if (!(e instanceof Error)) throw e;
 
