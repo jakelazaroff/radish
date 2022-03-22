@@ -1,11 +1,67 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .logo {
   display: block;
-  height: 6rem;
-  width: 17.5rem;
+  height: 4rem;
+  width: 12rem;
   background: url("images/wordmark.svg") no-repeat;
   background-size: contain;
   text-indent: -999rem;
-  margin-bottom: 4rem;
+}
+
+@media (min-width: 960px) {
+  .logo {
+    height: 6rem;
+    width: 18rem;
+    margin-bottom: 3.2rem;
+  }
+}
+
+.toggle {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.toggle > svg {
+  pointer-events: none;
+}
+
+@media (min-width: 960px) {
+  .toggle {
+    display: none;
+  }
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 2.4rem 3.2rem;
+  padding-right: 4.8rem;
+  background-color: var(--color-background);
+  box-shadow: inset -0.1rem 0 0 0 var(--color-surface);
+  transform: translateX(0);
+  transition: 0.25s transform ease-in-out;
+}
+
+.nav[aria-hidden="true"] {
+  transform: translateX(-100%);
+}
+
+@media (min-width: 960px) {
+  .nav {
+    position: static;
+    padding: 0;
+    transform: none !important;
+    box-shadow: none;
+    transition: none;
+  }
 }
 
 .menu {
@@ -15,6 +71,9 @@
 .sectionTitle {
   font-weight: 900;
   letter-spacing: -0.1ch;
+}
+
+.sectionTitle:not(:first-child) {
   margin-top: 1em;
 }
 
@@ -67,7 +126,7 @@
   padding: 0;
 }
 
-.toggle {
+.theme {
   display: block;
   padding: 0;
   background-color: transparent;
@@ -75,23 +134,23 @@
   cursor: pointer;
 }
 
-:global(html.day) .toggle.day,
-:global(html.night) .toggle.night {
+:global(html.day) .theme.day,
+:global(html.night) .theme.night {
   display: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  :global(html:not(.day)) .toggle.night {
+  :global(html:not(.day)) .theme.night {
     display: none;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  :global(html:not(.night)) .toggle.day {
+  :global(html:not(.night)) .theme.day {
     display: none;
   }
 }
 
-.toggleIcon {
+.themeIcon {
   pointer-events: none;
 }

@@ -1,15 +1,40 @@
 export type {};
 
-window.onclick = e => {
-  const target = e.target as HTMLElement;
-  if (target.tagName === "BUTTON" && target.dataset["js"] === "colorscheme") {
-    toggleColorScheme(target as HTMLButtonElement);
-  }
-  return;
+const navigation = document.querySelector("#navigation") as HTMLElement;
+
+const mq = matchMedia("(min-width: 960px)");
+let mobile = !mq.matches;
+mq.onchange = e => {
+  mobile = !e.matches;
+  if (mobile) navigation.setAttribute("aria-hidden", "true");
 };
 
-function toggleColorScheme(input: HTMLButtonElement) {
-  localStorage.setItem("colorscheme", input.value);
-  document.documentElement.classList.remove("night", "day");
-  document.documentElement.classList.add(input.value);
+if (mobile) navigation.setAttribute("aria-hidden", "true");
+
+const themes = document.querySelectorAll(`[data-js="colorscheme"]`);
+for (const el of Array.from(themes)) {
+  const button = el as HTMLButtonElement;
+  button.onclick = () => {
+    localStorage.setItem("colorscheme", button.value);
+    document.documentElement.classList.remove("night", "day");
+    document.documentElement.classList.add(button.value);
+  };
 }
+
+const toggle = document.querySelector(`[data-js="navigation"]`)!;
+(toggle as HTMLButtonElement).onclick = () => {
+  const hidden = navigation.getAttribute("aria-hidden") === "true";
+  if (hidden) navigation.setAttribute("aria-hidden", "false");
+  else navigation.setAttribute("aria-hidden", "true");
+};
+
+navigation.addEventListener("focusin", e => {
+  const focused = e.target as HTMLElement | null;
+  if (focused && navigation.contains(focused)) navigation.ariaHidden = "false";
+});
+
+navigation.addEventListener("focusout", e => {
+  const focused = e.relatedTarget as HTMLElement | null;
+  if (focused && !navigation.contains(focused))
+    navigation.setAttribute("aria-hidden", "true");
+});

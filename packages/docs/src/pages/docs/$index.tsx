@@ -7,6 +7,7 @@ import Footer from "components/Footer";
 import Sidebar from "components/Sidebar";
 import useContent, { usePages, Content } from "hooks/useContent";
 
+import js from "js/index.bundle.js";
 import Left from "./left.react.svg";
 import Right from "./right.react.svg";
 import css from "./style.module.css";
@@ -30,46 +31,49 @@ export default function Index(props: ResourcePageProps) {
     next = pages[index + 1];
 
   return (
-    <div className={css.wrapper}>
-      <Head title={`${page.title} | Radish`} />
-      <aside className={css.sidebar}>
-        <Sidebar section={section} slug={slug} />
-      </aside>
-      <main className={css.content}>
-        <h1>{page.title}</h1>
-        <Child />
+    <>
+      <div className={css.wrapper}>
+        <Head title={`${page.title} | Radish`} />
+        <aside className={css.sidebar}>
+          <Sidebar section={section} slug={slug} />
+        </aside>
+        <main className={css.content}>
+          <h1>{page.title}</h1>
+          <Child />
 
-        <menu className={css.neighbors}>
-          {prev ? (
-            <li className={clsx(css.neighbor, css.prev)}>
-              <a
-                className={css.neighborLink}
-                href={`/docs/${prev[0]}/${prev[1]}/`}
-              >
-                <span className={css.neighborLabel}>
-                  <Left /> Prev
-                </span>{" "}
-                {prev[2].title}
-              </a>
-            </li>
-          ) : null}
-          {next ? (
-            <li className={clsx(css.neighbor, css.next)}>
-              <a
-                className={css.neighborLink}
-                href={`/docs/${next[0]}/${next[1]}/`}
-              >
-                <span className={css.neighborLabel}>
-                  Next <Right />
-                </span>{" "}
-                {next[2].title}
-              </a>
-            </li>
-          ) : null}
-        </menu>
-      </main>
-      <Footer className={css.footer} />
-    </div>
+          <menu className={css.neighbors}>
+            {prev ? (
+              <li className={clsx(css.neighbor, css.prev)}>
+                <a
+                  className={css.neighborLink}
+                  href={`/docs/${prev[0]}/${prev[1]}/`}
+                >
+                  <span className={css.neighborLabel}>
+                    <Left /> Prev
+                  </span>{" "}
+                  {prev[2].title}
+                </a>
+              </li>
+            ) : null}
+            {next ? (
+              <li className={clsx(css.neighbor, css.next)}>
+                <a
+                  className={css.neighborLink}
+                  href={`/docs/${next[0]}/${next[1]}/`}
+                >
+                  <span className={css.neighborLabel}>
+                    Next <Right />
+                  </span>{" "}
+                  {next[2].title}
+                </a>
+              </li>
+            ) : null}
+          </menu>
+        </main>
+        <Footer className={css.footer} />
+      </div>
+      <script src={js} async />
+    </>
   );
 }
 

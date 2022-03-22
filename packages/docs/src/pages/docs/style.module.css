@@ -1,14 +1,29 @@
 .wrapper {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
 }
 
 .sidebar {
   position: sticky;
   top: 0;
-  padding: 4rem;
-  padding-top: 3.4rem;
+  padding: 1.8rem;
+  padding-top: 1.2rem;
+  background-color: var(--color-background);
+  box-shadow: 0 0.1rem 0 0 var(--color-surface);
+}
+
+@media (min-width: 960px) {
+  .sidebar {
+    padding: 4rem;
+    padding-top: 3.4rem;
+    box-shadow: none;
+  }
 }
 
 .content {

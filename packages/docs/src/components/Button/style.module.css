@@ -8,6 +8,7 @@
   height: 6rem;
   line-height: 6.6rem;
   padding: 0 3.6rem;
+  white-space: nowrap;
 }
 
 .button::before {

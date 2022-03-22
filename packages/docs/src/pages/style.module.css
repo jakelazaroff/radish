@@ -1,10 +1,12 @@
 .wrapper {
-  max-width: 96rem;
+  max-width: 104rem;
+  min-width: 32rem;
   margin: 0 auto;
+  padding: 4rem;
 }
 
 .header {
-  margin: 9.6rem 0;
+  margin: 7.2rem 0 9.6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,6 +20,7 @@
   background-size: contain;
   text-indent: -999rem;
   margin-bottom: 2.4rem;
+  max-width: 100%;
 }
 
 .subtitle {
@@ -28,15 +31,28 @@
 
 .ctas {
   display: grid;
-  grid-auto-flow: column;
+  justify-items: center;
   gap: 1.6rem;
   list-style: none;
+  padding: 0;
+}
+
+@media (min-width: 540px) {
+  .ctas {
+    grid-auto-flow: column;
+  }
 }
 
 .features {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 2rem;
+}
+
+@media (min-width: 720px) {
+  .features {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .feature {
@@ -55,5 +71,5 @@
 }
 
 .footer {
-  margin: 7.2rem 0 2.4rem;
+  margin: 2.4rem 0;
 }
