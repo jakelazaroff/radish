@@ -5,7 +5,7 @@
   "module": "./build/lib/index.js",
   "types": "./build/lib/index.d.ts",
   "license": "MIT",
-  "repository": "https://gitlab.com/jakelazaroff/radish",
+  "repository": "https://github.com/jakelazaroff/radish",
   "homepage": "https://radishjs.com",
   "engines": {
     "node": ">=16.0.0"

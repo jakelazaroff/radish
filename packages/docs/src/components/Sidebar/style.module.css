@@ -151,6 +151,10 @@
   padding: 0;
 }
 
+.text {
+  color: var(--color-main-text);
+}
+
 .theme {
   display: block;
   padding: 0;
@@ -178,4 +182,5 @@
 
 .themeIcon {
   pointer-events: none;
+  height: 2.4rem;
 }

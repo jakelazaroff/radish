@@ -3,9 +3,9 @@ import clsx from "clsx";
 import { useSections } from "hooks/useContent";
 import { Fragment } from "react";
 
-import gitlab from "images/gitlab.svg";
 import day from "./day.svg";
 import night from "./night.svg";
+import GitHub from "./github.react.svg";
 import Menu from "./menu.react.svg";
 import css from "./style.module.css";
 
@@ -64,10 +64,11 @@ export default function Sidebar(props: Props) {
         <menu className={css.actions}>
           <li>
             <a
-              href="https://gitlab.com/jakelazaroff/radish"
-              title="Open GitLab repository"
+              href="https://github.com/jakelazaroff/radish"
+              title="Open GitHub repository"
+              className={css.text}
             >
-              <img src={gitlab} alt="GitLab" />
+              <GitHub />
             </a>
           </li>
           <li>

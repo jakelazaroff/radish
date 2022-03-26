@@ -32,8 +32,8 @@ export default function Index() {
             </Button>
           </li>
           <li>
-            <Button href="https://gitlab.com/jakelazaroff/radish" kind="ghost">
-              GitLab
+            <Button href="https://github.com/jakelazaroff/radish" kind="ghost">
+              GitHub
             </Button>
           </li>
         </menu>
