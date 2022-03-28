@@ -13,6 +13,8 @@ import rehypeHighlight from "rehype-highlight";
 import toml from "toml";
 import yaml from "js-yaml";
 
+import fetch from "../util/fetch.js";
+
 interface Options {
   src: string;
 }
@@ -57,7 +59,7 @@ export const contentPlugin = (options: Options): Plugin => ({
     // to load a module in the `content` namespace, find all content file names and construct an "index" JS file that imports them
     build.onLoad({ filter: /.*/, namespace: "content" }, async () => {
       const paths = await globby([
-        path.join(options.src, "**/!(_)*.{md,mdx,json,toml,yaml,yml}")
+        path.join(options.src, "**/!(_)*.{md,mdx,json,toml,yaml,yml,js,ts}")
       ]);
       const files = paths.map(filepath => path.relative(options.src, filepath));
 
@@ -183,23 +185,41 @@ export const contentPlugin = (options: Options): Plugin => ({
       });
       return { contents: file.value, loader: "jsx" };
     });
+
+    build.onResolve({ filter: /^https?:\/\// }, args => ({
+      path: args.path,
+      namespace: "remote"
+    }));
+
+    build.onLoad({ filter: /.*/, namespace: "remote" }, async args => {
+      const contents = await fetch(args.path);
+      return { contents, loader: "json" };
+    });
   }
 });
 
+/** Given a plain JavaScript object, create source code that exports that object,
+ * overwriting any properties in the form of `url("./somefile.png")` with the result of an actual esbuild import */
 function compileDataFile(obj: object) {
+  // expose the object as the default export
   const src = [
     `const data = ${JSON.stringify(obj)};`,
     `export default data;\n`
   ];
 
-  let i = 1;
+  // get an index of key-value pairs in the form of [["path", "to", "value"], "value"]
   const index = indexObject(obj);
+
+  let i = 1;
   for (const [path, value] of index) {
+    // skip anything that's not a string
     if (typeof value !== "string") continue;
 
+    // skip anything that doesn't match `url("")`
     const [, url] = value.match(/^url\(["'](.*)["']\)/) ?? [];
     if (!url) continue;
 
+    // overwrite the imported property in the data object
     const bracketed = path.map(key => `["${key}"]`).join("");
     src.push(
       `import file${i} from "${url}";`,

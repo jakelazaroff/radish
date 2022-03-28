@@ -57,6 +57,29 @@ When content is available to your code, it's in an object that matches the file 
 
 The nested object for each piece of content is populated with the data or front matter from that file.
 
+## Remote Data
+
+Radish also supports content files written in JavaScript and TypeScript. If you import from a URL in those files, Radish will make an HTTP request and return the response as a JavaScript object. You can use this to load data from remote data sources:
+
+```js
+// content/scrobbles.js
+
+export { default } from "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=radish&api_key=abcdef1234567890&format=json";
+```
+
+You can also write code to process any data you load before exporting it:
+
+```js
+// content/scrobbles.js
+
+import res from "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=radish&api_key=abcdef1234567890&format=json";
+
+export default res.recenttracks.track.map(track => ({
+  title: track.name,
+  artist: track.artist["#text"]
+}));
+```
+
 ## Drafts
 
 Radish ignores content files if the first character in the filename is an underscore. For example, the page at `src/content/_draft.md` won't show up in the content object. This allows you to work on content without publishing it before it's ready.
