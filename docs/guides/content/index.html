@@ -52,6 +52,18 @@ Hello, world!
 }
 </code></pre>
 <p>The nested object for each piece of content is populated with the data or front matter from that file.</p>
+<h2>Remote Data</h2>
+<p>Radish also supports content files written in JavaScript and TypeScript. If you import from a URL in those files, Radish will make an HTTP request and return the response as a JavaScript object. You can use this to load data from remote data sources:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">export</span> { <span class="hljs-keyword">default</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&amp;user=radish&amp;api_key=abcdef1234567890&amp;format=json&quot;</span>;
+</code></pre>
+<p>You can also write code to process any data you load before exporting it:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> res <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&amp;user=radish&amp;api_key=abcdef1234567890&amp;format=json&quot;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> res.<span class="hljs-property">recenttracks</span>.<span class="hljs-property">track</span>.<span class="hljs-title hljs-function">map</span>(<span class="hljs-function"><span class="hljs-params">track</span> =&gt;</span> ({
+  <span class="hljs-attr">title</span>: track.<span class="hljs-property">name</span>,
+  <span class="hljs-attr">artist</span>: track.<span class="hljs-property">artist</span>[<span class="hljs-string">&quot;#text&quot;</span>]
+}));
+</code></pre>
 <h2>Drafts</h2>
 <p>Radish ignores content files if the first character in the filename is an underscore. For example, the page at <code>src/content/_draft.md</code> won&#x27;t show up in the content object. This allows you to work on content without publishing it before it&#x27;s ready.</p>
 <h2>Syntax Highlighting</h2>
