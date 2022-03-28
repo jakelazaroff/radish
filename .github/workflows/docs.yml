@@ -21,4 +21,5 @@ jobs:
         with:
           publish_branch: pages
           publish_dir: packages/docs/build
+          cname: radishjs.com
           github_token: ${{ secrets.GITHUB_TOKEN }}
