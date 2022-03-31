@@ -5,7 +5,7 @@
 @media (min-width: 960px) {
   .wrapper {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: start;
   }
 }
@@ -63,7 +63,7 @@
   line-height: var(--ms-0);
 }
 
-.neighborLabel > svg {
+.neighborLabel>svg {
   margin-top: -0.4rem;
 }
 
