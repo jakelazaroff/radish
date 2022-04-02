@@ -191,8 +191,15 @@ export const contentPlugin = (options: Options): Plugin => ({
       namespace: "remote"
     }));
 
+    const http = new Map<string, string>();
     build.onLoad({ filter: /.*/, namespace: "remote" }, async args => {
-      const contents = await fetch(args.path);
+      let contents = http.get(args.path);
+
+      if (!contents) {
+        contents = await fetch(args.path);
+        http.set(args.path, contents);
+      }
+
       return { contents, loader: "json" };
     });
   }
