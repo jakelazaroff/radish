@@ -10,6 +10,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "prettier": "@radish/prettier",
   "dependencies": {
     "@mdx-js/mdx": "^2.1.0",
     "@parcel/css": "^1.7.2",
@@ -26,6 +27,7 @@
     "ws": "^8.5.0"
   },
   "devDependencies": {
+    "@radish/prettier": "*",
     "@radish/tsconfig": "*",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^17.0.23",

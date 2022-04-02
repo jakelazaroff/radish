@@ -63,7 +63,7 @@
   line-height: var(--ms-0);
 }
 
-.neighborLabel>svg {
+.neighborLabel > svg {
   margin-top: -0.4rem;
 }
 
