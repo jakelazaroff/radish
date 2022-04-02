@@ -1,6 +1,6 @@
 {
   "name": "radish",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "type": "module",
   "module": "./build/lib/index.js",
   "types": "./build/lib/index.d.ts",
