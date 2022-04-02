@@ -145,3 +145,15 @@ declare module "*.webm" {
   const src: string;
   export default src;
 }
+
+// remote content
+
+declare module "http://*" {
+  const json: string;
+  export default json;
+}
+
+declare module "https://*" {
+  const json: string;
+  export default json;
+}
