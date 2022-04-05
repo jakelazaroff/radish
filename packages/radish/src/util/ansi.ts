@@ -15,7 +15,10 @@ function fn(seq: number) {
   };
 }
 
+export const underline = fn(4);
+export const red = fn(31);
 export const green = fn(32);
 export const yellow = fn(33);
 export const cyan = fn(96);
 export const bold = fn(1);
+export const dim = fn(2);

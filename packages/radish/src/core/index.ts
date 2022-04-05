@@ -10,7 +10,7 @@ export async function build(options: BundleOptions) {
   const src = path.resolve(options.src);
   const dest = path.resolve(options.dest);
 
-  return bundle({ ...options, src, dest });
+  await bundle({ ...options, src, dest });
 }
 
 interface DevOptions {

@@ -18,7 +18,8 @@ import { svgPlugin } from "./svg.js";
 
 import type { Page } from "./types";
 import esm from "./esm.js";
-import render from "./render.js";
+import render, { RenderError } from "./render.js";
+import * as ansi from "../util/ansi.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,7 +57,8 @@ export async function bundle(options: BundleOptions) {
   const result = await esbuild.build({
     write: false,
     bundle: true,
-    minify: true,
+    minify: false,
+    // sourcemap: "inline",
     entryPoints: entry,
     nodePaths: [SRC],
     outdir: DEST,
@@ -85,7 +87,7 @@ export async function bundle(options: BundleOptions) {
         const output = result.outputFiles ?? [];
         const files = [...output, ...cssDeps.values()];
         const content = contentMap();
-        await writeFiles(files, {
+        const errors = await writeFiles(files, {
           content,
           buildDir: DEST,
           assetDir: ASSETS,
@@ -93,6 +95,8 @@ export async function bundle(options: BundleOptions) {
           serviceWorker: SERVICE_WORKER,
           websocket: options.websocket
         });
+        reportErrors(errors);
+        console.log(`Rebuilt from ${files.length} source files.`);
         options.onRebuild?.();
       }
     }
@@ -101,7 +105,7 @@ export async function bundle(options: BundleOptions) {
   // write the files to the filesystem
   const files = [...result.outputFiles, ...cssDeps.values()];
   const content = contentMap();
-  await writeFiles(files, {
+  const errors = await writeFiles(files, {
     content,
     buildDir: DEST,
     assetDir: ASSETS,
@@ -109,6 +113,7 @@ export async function bundle(options: BundleOptions) {
     serviceWorker: SERVICE_WORKER,
     websocket: options.websocket
   });
+  reportErrors(errors);
   await buildServiceWorker(DEST, PUBLIC);
 
   const end = process.hrtime.bigint();
@@ -125,7 +130,10 @@ interface WriteOptions {
   websocket?: number;
 }
 
-async function writeFiles(files: OutputFile[], options: WriteOptions) {
+async function writeFiles(
+  files: OutputFile[],
+  options: WriteOptions
+): Promise<RenderError[]> {
   const { content, assetDir, buildDir, publicPath, serviceWorker, websocket } =
     options;
 
@@ -136,21 +144,25 @@ async function writeFiles(files: OutputFile[], options: WriteOptions) {
 
   // create assets dir
   await fs.promises.mkdir(assetDir, { recursive: true });
-  return Promise.all(
+  const errors = await Promise.all(
     files.map(async file => {
       const filepath = path.parse(file.path);
-      if (filepath.ext !== ".js")
-        return await fs.promises.writeFile(
-          path.join(assetDir, filepath.base),
-          file.contents
-        );
-
-      // bundled JS files are treated as assets
-      if (/\.bundle-\w+\.js$/.test(filepath.base))
+      if (filepath.ext !== ".js") {
         await fs.promises.writeFile(
           path.join(assetDir, filepath.base),
           file.contents
         );
+        return [];
+      }
+
+      // bundled JS files are treated as assets
+      if (/\.bundle-\w+\.js$/.test(filepath.base)) {
+        await fs.promises.writeFile(
+          path.join(assetDir, filepath.base),
+          file.contents
+        );
+        return [];
+      }
 
       return writePage(
         file,
@@ -162,6 +174,8 @@ async function writeFiles(files: OutputFile[], options: WriteOptions) {
       );
     })
   );
+
+  return errors.flat();
 }
 
 async function writePage(
@@ -171,7 +185,8 @@ async function writePage(
   serviceWorker: boolean,
   preload: Array<{ href: string; as: string }>,
   websocket?: number
-) {
+): Promise<RenderError[]> {
+  const errors: RenderError[] = [];
   const filepath = path.parse(file.path);
 
   // compile the component into an ES module
@@ -184,15 +199,17 @@ async function writePage(
     await Promise.all(
       [...paths].map(async pathname => {
         const dir = path.join(filepath.dir, pathname);
-        const html = render(component, {
+        const result = render(component, {
           path: pathname,
           serviceWorker,
           preload,
           websocket
         });
 
-        await fs.promises.mkdir(dir, { recursive: true });
-        await fs.promises.writeFile(path.join(dir, "index.html"), html);
+        if (typeof result === "string") {
+          await fs.promises.mkdir(dir, { recursive: true });
+          await fs.promises.writeFile(path.join(dir, "index.html"), result);
+        } else errors.push(result);
       })
     );
   } else {
@@ -205,16 +222,20 @@ async function writePage(
       ? path.join(filepath.dir, filepath.name)
       : filepath.dir;
 
-    const html = render(component, {
+    const result = render(component, {
       path: dir,
       serviceWorker,
       preload,
       websocket
     });
 
-    await fs.promises.mkdir(dir, { recursive: true });
-    await fs.promises.writeFile(path.join(dir, name + ".html"), html);
+    if (typeof result === "string") {
+      await fs.promises.mkdir(dir, { recursive: true });
+      await fs.promises.writeFile(path.join(dir, name + ".html"), result);
+    } else errors.push(result);
   }
+
+  return errors;
 }
 
 async function buildServiceWorker(dest: string, publicPath: string) {
@@ -226,4 +247,23 @@ async function buildServiceWorker(dest: string, publicPath: string) {
     format: "esm",
     define: { PUBLIC_PATH: JSON.stringify(publicPath) }
   });
+}
+
+function reportErrors(errors: RenderError[]) {
+  if (!errors.length) return;
+
+  const noun = errors.length === 1 ? "error" : "errors";
+  const msg = [`⚠️  Radish encountered ${errors.length} ${noun}:\n`];
+
+  for (const error of errors) {
+    const line = "" + error.lineNo;
+    msg.push(
+      ansi.red(`✘ [${error.type}] `) + ansi.bold(error.message) + "\n",
+      `    ${error.file}`,
+      `      ` + ansi.dim(line + " | " + error.line),
+      `      ` + ansi.red("^".padStart(line.length + 3 + error.colNo))
+    );
+  }
+
+  console.error(msg.join("\n"));
 }
