@@ -10,7 +10,8 @@ export async function build(options: BundleOptions) {
   const src = path.resolve(options.src);
   const dest = path.resolve(options.dest);
 
-  await bundle({ ...options, src, dest });
+  const ok = await bundle({ ...options, src, dest });
+  if (!ok) process.exit(1);
 }
 
 interface DevOptions {
@@ -25,7 +26,7 @@ export async function dev(options: DevOptions) {
 
   const port = options.port ?? 8000;
   const ws = websocket({ port: port + 1 });
-  await bundle({
+  const ok = await bundle({
     src,
     dest,
     public: "/public",
@@ -33,6 +34,13 @@ export async function dev(options: DevOptions) {
     websocket: port + 1,
     onRebuild: ws.refresh
   });
+
+  if (!ok) {
+    ws.close();
+    process.exit(1);
+    return;
+  }
+
   serve({ dir: dest, port });
 }
 

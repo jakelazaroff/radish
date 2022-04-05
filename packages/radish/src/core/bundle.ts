@@ -5,7 +5,7 @@ import * as url from "node:url";
 import * as process from "node:process";
 
 // lib
-import esbuild, { OutputFile } from "esbuild";
+import esbuild, { BuildResult, OutputFile } from "esbuild";
 import { globby } from "globby";
 
 // plugins
@@ -39,7 +39,7 @@ export interface BundleOptions {
   onRebuild?(): void;
 }
 
-export async function bundle(options: BundleOptions) {
+export async function bundle(options: BundleOptions): Promise<boolean> {
   const start = process.hrtime.bigint();
 
   const SRC = path.resolve(options.src);
@@ -54,58 +54,65 @@ export async function bundle(options: BundleOptions) {
   // bundle the pages and assets
   const pages = await globby([path.join(PAGES, "**/*{jsx,tsx}")]);
   const entry = pages.filter(page => !path.basename(page).startsWith("_"));
-  const result = await esbuild.build({
-    write: false,
-    bundle: true,
-    minify: false,
-    // sourcemap: "inline",
-    entryPoints: entry,
-    nodePaths: [SRC],
-    outdir: DEST,
-    outbase: PAGES,
-    format: "esm",
-    inject: [path.resolve(__dirname, "inject.js")],
-    publicPath: PUBLIC,
-    loader: loaders,
-    plugins: [
-      pagePlugin({ src: SRC }),
-      contentPlugin({ src: CONTENT }),
-      cssPlugin({ src: SRC, dest: ASSETS, prefix: PUBLIC }),
-      jsPlugin({ dest: ASSETS, prefix: PUBLIC }),
-      svgPlugin
-    ],
+  const result = await esbuild
+    .build({
+      write: false,
+      bundle: true,
+      minify: false,
+      logLevel: "silent",
+      // sourcemap: "inline",
+      entryPoints: entry,
+      nodePaths: [SRC],
+      outdir: DEST,
+      outbase: PAGES,
+      format: "esm",
+      inject: [path.resolve(__dirname, "inject.js")],
+      publicPath: PUBLIC,
+      loader: loaders,
+      plugins: [
+        pagePlugin({ src: SRC }),
+        contentPlugin({ src: CONTENT }),
+        cssPlugin({ src: SRC, dest: ASSETS, prefix: PUBLIC }),
+        jsPlugin({ dest: ASSETS, prefix: PUBLIC }),
+        svgPlugin
+      ],
 
-    incremental: options.watch,
-    watch: options.watch && {
-      async onRebuild(error, result) {
-        if (error) return console.error("Watch build failed:", error);
-        if (!result) {
-          return console.error("No result returned from watch build.");
+      incremental: options.watch,
+      watch: options.watch && {
+        async onRebuild(error, result) {
+          if (error) return reportErrors(error.errors.map(parseError));
+          if (!result) {
+            return console.error("No result returned from watch build.");
+          }
+
+          // write the files to the filesystem
+          const output = result.outputFiles ?? [];
+          const files = [...output, ...cssDeps.values()];
+          const content = contentMap();
+          const bundleErrors = result.errors.map(parseError);
+          const renderErrors = await writeFiles(files, {
+            content,
+            buildDir: DEST,
+            assetDir: ASSETS,
+            publicPath: PUBLIC,
+            serviceWorker: SERVICE_WORKER,
+            websocket: options.websocket
+          });
+          reportErrors([...bundleErrors, ...renderErrors]);
+          console.log(`Rebuilt from ${files.length} source files.`);
+          options.onRebuild?.();
         }
-
-        // write the files to the filesystem
-        const output = result.outputFiles ?? [];
-        const files = [...output, ...cssDeps.values()];
-        const content = contentMap();
-        const errors = await writeFiles(files, {
-          content,
-          buildDir: DEST,
-          assetDir: ASSETS,
-          publicPath: PUBLIC,
-          serviceWorker: SERVICE_WORKER,
-          websocket: options.websocket
-        });
-        reportErrors(errors);
-        console.log(`Rebuilt from ${files.length} source files.`);
-        options.onRebuild?.();
       }
-    }
-  });
+    })
+    .catch(result => result as BuildResult);
+
+  const errors: RenderError[] = result.errors.map(parseError);
 
   // write the files to the filesystem
-  const files = [...result.outputFiles, ...cssDeps.values()];
+  const outputFiles = result.outputFiles || [];
+  const files = [...outputFiles, ...cssDeps.values()];
   const content = contentMap();
-  const errors = await writeFiles(files, {
+  const renderErrors = await writeFiles(files, {
     content,
     buildDir: DEST,
     assetDir: ASSETS,
@@ -113,12 +120,16 @@ export async function bundle(options: BundleOptions) {
     serviceWorker: SERVICE_WORKER,
     websocket: options.websocket
   });
-  reportErrors(errors);
+  reportErrors([...errors, ...renderErrors]);
   await buildServiceWorker(DEST, PUBLIC);
 
-  const end = process.hrtime.bigint();
-  const ms = Number((end - start) / 1_000_000n);
-  console.log(`🏗  Built in ${ms / 1000}s`);
+  if (!errors.length) {
+    const end = process.hrtime.bigint();
+    const ms = Number((end - start) / 1_000_000n);
+    console.log(`🏗  Built in ${ms / 1000}s`);
+  }
+
+  return !errors.length;
 }
 
 interface WriteOptions {
@@ -266,4 +277,15 @@ function reportErrors(errors: RenderError[]) {
   }
 
   console.error(msg.join("\n"));
+}
+
+function parseError(error: BuildResult["errors"][0]) {
+  return {
+    type: "BundleError",
+    message: error.text,
+    file: error.location?.file ?? "",
+    line: error.location?.lineText ?? "",
+    lineNo: error.location?.line ?? 0,
+    colNo: error.location?.column ?? 0
+  };
 }

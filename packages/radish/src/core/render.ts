@@ -9,7 +9,6 @@ export interface RenderError {
   type: string;
   message: string;
   file: string;
-  fn: string;
   line: string;
   lineNo: number;
   colNo: number;
@@ -50,9 +49,9 @@ function parseError(e: Error): RenderError {
   const [, frame] = e.stack?.split("\n") || [];
   if (!frame) throw e;
 
-  const [, fn, body = "", l, c] =
-    frame.match(/\s*at (\w+) \((.*):(\d+):(\d+)\)/) ?? [];
-  if (!fn || !l || !c) throw e;
+  const [, body = "", l, c] =
+    frame.match(/\s*at \w+ \((.*):(\d+):(\d+)\)/) ?? [];
+  if (!l || !c) throw e;
   const lineNo = Number(l),
     colNo = Number(c);
 
@@ -77,7 +76,6 @@ function parseError(e: Error): RenderError {
     line: lines[lineNo - 1] ?? "",
     lineNo: fileLineNo,
     colNo,
-    fn,
     file
   };
 }

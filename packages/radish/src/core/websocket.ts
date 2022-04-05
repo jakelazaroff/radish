@@ -14,6 +14,9 @@ export function websocket(options: WebSocketOptions) {
     refresh() {
       for (const client of wss.clients)
         client.send(JSON.stringify({ type: "refresh" }));
+    },
+    close() {
+      wss.close();
     }
   };
 }
