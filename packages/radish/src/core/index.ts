@@ -38,7 +38,6 @@ export async function dev(options: DevOptions) {
   if (!ok) {
     ws.close();
     process.exit(1);
-    return;
   }
 
   serve({ dir: dest, port });

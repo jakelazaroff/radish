@@ -18,7 +18,13 @@ import { svgPlugin } from "./svg.js";
 
 import type { Page } from "./types";
 import esm from "./esm.js";
-import render, { RenderError } from "./render.js";
+import render from "./render.js";
+import {
+  fromBuildError,
+  fromRenderError,
+  fromSuccess,
+  RadishBuildResult
+} from "./result.js";
 import * as ansi from "../util/ansi.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -54,7 +60,7 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
   // bundle the pages and assets
   const pages = await globby([path.join(PAGES, "**/*{jsx,tsx}")]);
   const entry = pages.filter(page => !path.basename(page).startsWith("_"));
-  const result = await esbuild
+  const buildResult = await esbuild
     .build({
       write: false,
       bundle: true,
@@ -80,7 +86,7 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
       incremental: options.watch,
       watch: options.watch && {
         async onRebuild(error, result) {
-          if (error) return reportErrors(error.errors.map(parseError));
+          if (error) return reportErrors(error.errors.map(fromBuildError));
           if (!result) {
             return console.error("No result returned from watch build.");
           }
@@ -89,8 +95,8 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
           const output = result.outputFiles ?? [];
           const files = [...output, ...cssDeps.values()];
           const content = contentMap();
-          const bundleErrors = result.errors.map(parseError);
-          const renderErrors = await writeFiles(files, {
+          const bundleErrors = result.errors.map(fromBuildError);
+          const renderResults = await writeFiles(files, {
             content,
             buildDir: DEST,
             assetDir: ASSETS,
@@ -98,21 +104,24 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
             serviceWorker: SERVICE_WORKER,
             websocket: options.websocket
           });
-          reportErrors([...bundleErrors, ...renderErrors]);
-          console.log(`Rebuilt from ${files.length} source files.`);
+          reportErrors([...bundleErrors, ...renderResults]);
+
+          // prettier-ignore
+          console.log(`Rebuilt ${renderResults.filter(r => !r.error).length} files.`);
           options.onRebuild?.();
         }
       }
     })
     .catch(result => result as BuildResult);
 
-  const errors: RenderError[] = result.errors.map(parseError);
+  const results: RadishBuildResult[] = [];
+  results.push(...buildResult.errors.map(fromBuildError));
 
   // write the files to the filesystem
-  const outputFiles = result.outputFiles || [];
+  const outputFiles = buildResult.outputFiles || [];
   const files = [...outputFiles, ...cssDeps.values()];
   const content = contentMap();
-  const renderErrors = await writeFiles(files, {
+  const renderResults = await writeFiles(files, {
     content,
     buildDir: DEST,
     assetDir: ASSETS,
@@ -120,8 +129,12 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
     serviceWorker: SERVICE_WORKER,
     websocket: options.websocket
   });
-  reportErrors([...errors, ...renderErrors]);
-  await buildServiceWorker(DEST, PUBLIC);
+  results.push(...renderResults);
+  const swResult = await buildServiceWorker(DEST, PUBLIC);
+  results.push(swResult);
+
+  const errors = results.filter(result => result.error);
+  reportErrors(errors);
 
   if (!errors.length) {
     const end = process.hrtime.bigint();
@@ -141,10 +154,7 @@ interface WriteOptions {
   websocket?: number;
 }
 
-async function writeFiles(
-  files: OutputFile[],
-  options: WriteOptions
-): Promise<RenderError[]> {
+async function writeFiles(files: OutputFile[], options: WriteOptions) {
   const { content, assetDir, buildDir, publicPath, serviceWorker, websocket } =
     options;
 
@@ -155,27 +165,23 @@ async function writeFiles(
 
   // create assets dir
   await fs.promises.mkdir(assetDir, { recursive: true });
-  const errors = await Promise.all(
+  const results = await Promise.all(
     files.map(async file => {
       const filepath = path.parse(file.path);
       if (filepath.ext !== ".js") {
-        await fs.promises.writeFile(
-          path.join(assetDir, filepath.base),
-          file.contents
-        );
-        return [];
+        const output = path.join(assetDir, filepath.base);
+        await fs.promises.writeFile(output, file.contents);
+        return [fromSuccess(file.path, output)];
       }
 
       // bundled JS files are treated as assets
       if (/\.bundle-\w+\.js$/.test(filepath.base)) {
-        await fs.promises.writeFile(
-          path.join(assetDir, filepath.base),
-          file.contents
-        );
-        return [];
+        const output = path.join(assetDir, filepath.base);
+        await fs.promises.writeFile(output, file.contents);
+        return [fromSuccess(file.path, output)];
       }
 
-      return writePage(
+      return await writePage(
         file,
         content,
         buildDir,
@@ -186,7 +192,7 @@ async function writeFiles(
     })
   );
 
-  return errors.flat();
+  return results.flat();
 }
 
 async function writePage(
@@ -196,8 +202,8 @@ async function writePage(
   serviceWorker: boolean,
   preload: Array<{ href: string; as: string }>,
   websocket?: number
-): Promise<RenderError[]> {
-  const errors: RenderError[] = [];
+): Promise<RadishBuildResult[]> {
+  const results: RadishBuildResult[] = [];
   const filepath = path.parse(file.path);
 
   // compile the component into an ES module
@@ -210,17 +216,22 @@ async function writePage(
     await Promise.all(
       [...paths].map(async pathname => {
         const dir = path.join(filepath.dir, pathname);
-        const result = render(component, {
-          path: pathname,
-          serviceWorker,
-          preload,
-          websocket
-        });
+        try {
+          const html = render(component, {
+            path: pathname,
+            serviceWorker,
+            preload,
+            websocket
+          });
 
-        if (typeof result === "string") {
+          const output = path.join(dir, "index.html");
           await fs.promises.mkdir(dir, { recursive: true });
-          await fs.promises.writeFile(path.join(dir, "index.html"), result);
-        } else errors.push(result);
+          await fs.promises.writeFile(output, html);
+          results.push(fromSuccess(file.path, output));
+        } catch (e) {
+          if (!(e instanceof Error)) throw e;
+          results.push(fromRenderError(e));
+        }
       })
     );
   } else {
@@ -233,59 +244,62 @@ async function writePage(
       ? path.join(filepath.dir, filepath.name)
       : filepath.dir;
 
-    const result = render(component, {
-      path: dir,
-      serviceWorker,
-      preload,
-      websocket
-    });
+    try {
+      const html = render(component, {
+        path: dir,
+        serviceWorker,
+        preload,
+        websocket
+      });
 
-    if (typeof result === "string") {
+      const output = path.join(dir, name + ".html");
       await fs.promises.mkdir(dir, { recursive: true });
-      await fs.promises.writeFile(path.join(dir, name + ".html"), result);
-    } else errors.push(result);
+      await fs.promises.writeFile(output, html);
+      results.push(fromSuccess(file.path, output));
+    } catch (e) {
+      if (!(e instanceof Error)) throw e;
+      results.push(fromRenderError(e));
+    }
   }
 
-  return errors;
+  return results;
 }
 
 async function buildServiceWorker(dest: string, publicPath: string) {
-  return esbuild.build({
+  const input = path.resolve(__dirname, "../lib/sw.js");
+  const output = path.join(dest, "sw.js");
+  await esbuild.build({
     bundle: true,
     minify: true,
-    outfile: path.join(dest, "sw.js"),
-    entryPoints: [path.resolve(__dirname, "../lib/sw.js")],
+    outfile: output,
+    entryPoints: [input],
     format: "esm",
     define: { PUBLIC_PATH: JSON.stringify(publicPath) }
   });
+
+  // TODO: handle failure
+  return fromSuccess(input, output);
 }
 
-function reportErrors(errors: RenderError[]) {
+function reportErrors(results: RadishBuildResult[]) {
+  const errors = results.filter(result => result.error);
   if (!errors.length) return;
 
   const noun = errors.length === 1 ? "error" : "errors";
   const msg = [`⚠️  Radish encountered ${errors.length} ${noun}:\n`];
 
-  for (const error of errors) {
-    const line = "" + error.lineNo;
+  for (const result of errors) {
+    const column = result.error?.column ?? 0;
+    const line = "" + result.error?.line;
     msg.push(
-      ansi.red(`✘ [${error.type}] `) + ansi.bold(error.message) + "\n",
-      `    ${error.file}`,
-      `      ` + ansi.dim(line + " | " + error.line),
-      `      ` + ansi.red("^".padStart(line.length + 3 + error.colNo))
+      ansi.red(`✘ [${result.error?.type}] `) +
+        ansi.bold(result.error?.message) +
+        "\n",
+      `    ${result.inputFile}`,
+      `      ` + ansi.dim(line + " | " + result.error?.line),
+      `      ` + ansi.red("^".padStart(line.length + 3 + column))
     );
   }
 
   console.error(msg.join("\n"));
-}
-
-function parseError(error: BuildResult["errors"][0]) {
-  return {
-    type: "BundleError",
-    message: error.text,
-    file: error.location?.file ?? "",
-    line: error.location?.lineText ?? "",
-    lineNo: error.location?.line ?? 0,
-    colNo: error.location?.column ?? 0
-  };
 }
