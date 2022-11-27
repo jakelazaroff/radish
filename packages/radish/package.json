@@ -13,12 +13,12 @@
   "prettier": "@radish/prettier",
   "dependencies": {
     "@mdx-js/mdx": "^2.1.0",
-    "@parcel/css": "^1.7.2",
     "@svgr/core": "^6.2.1",
     "esbuild": "^0.14.27",
     "globby": "^13.1.1",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
+    "lightningcss": "^1.16.1",
     "react-helmet-async": "^1.2.3",
     "rehype-highlight": "^5.0.2",
     "remark-frontmatter": "^4.0.1",

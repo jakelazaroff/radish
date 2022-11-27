@@ -17,6 +17,7 @@
     // ecmascript features
     "downlevelIteration": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     // strict typechecking
     "strict": true,

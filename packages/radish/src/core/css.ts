@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 // lib
-import css from "@parcel/css";
+import * as css from "lightningcss";
 import type { OutputFile, Plugin, PluginBuild } from "esbuild";
 import { globby } from "globby";
 

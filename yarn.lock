@@ -313,62 +313,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@parcel/css-darwin-arm64@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-darwin-arm64/-/css-darwin-arm64-1.7.2.tgz#a7564d280b325e385abd7675aee56d4f5a014c38"
-  integrity sha512-i0b8n8FF+iSK8cLOQhzxXZbbWAGTRLYih4W7Jim4QOerTBvl0zmBajua0hst+phuDDgSO5GKm1/80X+7v8VW+g==
-
-"@parcel/css-darwin-x64@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-darwin-x64/-/css-darwin-x64-1.7.2.tgz#15307712347bda116865dca7f02aded74c98c151"
-  integrity sha512-RsidKHrUhOp9wSlyBOxBTPcskh/QRtUV0uOVhHVLZtr7ebWT7L0T6wZJGX3vpTewgwIPB66IjJCE8ovdJLeMEg==
-
-"@parcel/css-linux-arm-gnueabihf@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-linux-arm-gnueabihf/-/css-linux-arm-gnueabihf-1.7.2.tgz#21c804e690b32bc80aed1ef8a5f2bcf84081d777"
-  integrity sha512-NF6lvp2PDWqwUB16z1XQECyIIjO9EB6J9tMleLo1l6Set9nIaLRl3Jl06f3lFSBhxWQBqZ3Gr9c/5gvLtNjRew==
-
-"@parcel/css-linux-arm64-gnu@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-linux-arm64-gnu/-/css-linux-arm64-gnu-1.7.2.tgz#34d0416aa88030d782911af1e57f289730ccf264"
-  integrity sha512-sqSzj8eoTFJkajLIjCbb8qDXLwH+4CQU0c7598Dg8K/culVuGlGn5mwwgfSK/HIZq6Wt8SD5iG0HmtNAwrcpCw==
-
-"@parcel/css-linux-arm64-musl@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-linux-arm64-musl/-/css-linux-arm64-musl-1.7.2.tgz#39fad0318a8570581eadb0437ff446dbbb83e011"
-  integrity sha512-XDnf5eY0O5exsMpv+hwtrxsi7vrm/kz2+JRar+7vNalxzFEc6xJhh/sRQw4XU7Qn9oCgJ/BDp58c6uDeQInEAQ==
-
-"@parcel/css-linux-x64-gnu@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-linux-x64-gnu/-/css-linux-x64-gnu-1.7.2.tgz#f208f3d6e3f721bbcb440e1a5c985a4371052caa"
-  integrity sha512-9c912OgRIR5i4Pffxh123fgcsGy0njcBD9di+ipb6RHi8ZQLhiUhbdMAXINHwJT/7pSds+RJGL6VNGP3KqSxCA==
-
-"@parcel/css-linux-x64-musl@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-linux-x64-musl/-/css-linux-x64-musl-1.7.2.tgz#658790eaded3450972a4747932fb12824e5c899f"
-  integrity sha512-D9ZEllB21G9PA9+f+jdOXh3qPeryg+6fGSe1dXfLvQ0yG41FeBQgbIpPabhLUCNEdHG11t43LkJT5RVuG/n6uw==
-
-"@parcel/css-win32-x64-msvc@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css-win32-x64-msvc/-/css-win32-x64-msvc-1.7.2.tgz#3f76c08aa5c3ec1337dc9b3e215f0484af51844d"
-  integrity sha512-9j8fu0nSqVj2w1NusgLJX9/XP5ITQke5/eRn6/no9cx4GD2YDsuKchDIc2yVxxuGD0WrDECScEtuXEKEmmxjxw==
-
-"@parcel/css@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@parcel/css/-/css-1.7.2.tgz#defbf5f51cf290eecef1ad5b30bdf235e5047124"
-  integrity sha512-OcdGio5QCvshOJGXaqICC93yMDCi1baZ3yK/xHbKmu9R4p3IBp9+/hmjg5ZkfmJLvqsrguZ1JJndoSXITxPxpg==
-  dependencies:
-    detect-libc "^1.0.3"
-  optionalDependencies:
-    "@parcel/css-darwin-arm64" "1.7.2"
-    "@parcel/css-darwin-x64" "1.7.2"
-    "@parcel/css-linux-arm-gnueabihf" "1.7.2"
-    "@parcel/css-linux-arm64-gnu" "1.7.2"
-    "@parcel/css-linux-arm64-musl" "1.7.2"
-    "@parcel/css-linux-x64-gnu" "1.7.2"
-    "@parcel/css-linux-x64-musl" "1.7.2"
-    "@parcel/css-win32-x64-msvc" "1.7.2"
-
 "@svgr/babel-plugin-add-jsx-attribute@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-6.0.0.tgz#bd6d1ff32a31b82b601e73672a789cc41e84fe18"
@@ -2096,6 +2040,62 @@ levn@^0.4.1:
   dependencies:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
+
+lightningcss-darwin-arm64@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.16.1.tgz#f67287c500b96bc5d21e6d04de0e2607ff2784ff"
+  integrity sha512-/J898YSAiGVqdybHdIF3Ao0Hbh2vyVVj5YNm3NznVzTSvkOi3qQCAtO97sfmNz+bSRHXga7ZPLm+89PpOM5gAg==
+
+lightningcss-darwin-x64@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.16.1.tgz#2dc89dd4e1eb3c39ca4abbeca769a276c206b038"
+  integrity sha512-vyKCNPRNRqke+5i078V+N0GLfMVLEaNcqIcv28hA/vUNRGk/90EDkDB9EndGay0MoPIrC2y0qE3Y74b/OyedqQ==
+
+lightningcss-linux-arm-gnueabihf@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.16.1.tgz#9edacb0d9bd18fa1830a9d9f9ba00bdc9f8dabc9"
+  integrity sha512-0AJC52l40VbrzkMJz6qRvlqVVGykkR2MgRS4bLjVC2ab0H0I/n4p6uPZXGvNIt5gw1PedeND/hq+BghNdgfuPQ==
+
+lightningcss-linux-arm64-gnu@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.16.1.tgz#b6986324d21de3813b84432b51c3e7b019dd2224"
+  integrity sha512-NqxYXsRvI3/Fb9AQLXKrYsU0Q61LqKz5It+Es9gidsfcw1lamny4lmlUgO3quisivkaLCxEkogaizcU6QeZeWQ==
+
+lightningcss-linux-arm64-musl@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.16.1.tgz#d13a01ed19a72c99b4ef9c5b9d8ee0dcdc4bf3ed"
+  integrity sha512-VUPQ4dmB9yDQxpJF8/imtwNcbIPzlL6ArLHSUInOGxipDk1lOAklhUjbKUvlL3HVlDwD3WHCxggAY01WpFcjiA==
+
+lightningcss-linux-x64-gnu@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.16.1.tgz#6c888ef4faac53333d6d2241da463c405b19ec79"
+  integrity sha512-A40Jjnbellnvh4YF+kt047GLnUU59iLN2LFRCyWQG+QqQZeXOCzXfTQ6EJB4yvHB1mQvWOVdAzVrtEmRw3Vh8g==
+
+lightningcss-linux-x64-musl@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.16.1.tgz#20b51081679dd6b7271ce11df825dc536a0c617c"
+  integrity sha512-VZf76GxW+8mk238tpw0u9R66gBi/m0YB0TvD54oeGiOqvTZ/mabkBkbsuXTSWcKYj8DSrLW+A42qu+6PLRsIgA==
+
+lightningcss-win32-x64-msvc@1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.16.1.tgz#7546b4dca78314b1d2701ed220cb6e50b8c6b5ca"
+  integrity sha512-Djy+UzlTtJMayVJU3eFuUW5Gdo+zVTNPJhlYw25tNC9HAoMCkIdSDDrGsWEdEyibEV7xwB8ySTmLuxilfhBtgg==
+
+lightningcss@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/lightningcss/-/lightningcss-1.16.1.tgz#b5a16632b6824d023af2fb7d35b1c6fc42608bc6"
+  integrity sha512-zU8OTaps3VAodmI2MopfqqOQQ4A9L/2Eo7xoTH/4fNkecy6ftfiGwbbRMTQqtIqJjRg3f927e+lnyBBPhucY1Q==
+  dependencies:
+    detect-libc "^1.0.3"
+  optionalDependencies:
+    lightningcss-darwin-arm64 "1.16.1"
+    lightningcss-darwin-x64 "1.16.1"
+    lightningcss-linux-arm-gnueabihf "1.16.1"
+    lightningcss-linux-arm64-gnu "1.16.1"
+    lightningcss-linux-arm64-musl "1.16.1"
+    lightningcss-linux-x64-gnu "1.16.1"
+    lightningcss-linux-x64-musl "1.16.1"
+    lightningcss-win32-x64-msvc "1.16.1"
 
 lines-and-columns@^1.1.6:
   version "1.2.4"
