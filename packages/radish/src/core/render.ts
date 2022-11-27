@@ -1,6 +1,6 @@
 // lib
 import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server.js";
+import { renderToStaticMarkup } from "react-dom/server";
 import type { HelmetServerState } from "react-helmet-async";
 
 import type { Page, PageProps } from "./types";
