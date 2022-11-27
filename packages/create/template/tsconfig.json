@@ -7,7 +7,6 @@
     // build options
     "baseUrl": "src",
     "noEmit": true,
-    "jsx": "preserve",
 
     // module resolution
     "module": "es2020",

@@ -14,7 +14,7 @@
   "dependencies": {
     "@mdx-js/mdx": "^2.1.0",
     "@svgr/core": "^6.2.1",
-    "esbuild": "^0.14.27",
+    "esbuild": "~0.15.15",
     "globby": "^13.1.1",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
