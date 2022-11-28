@@ -6,7 +6,11 @@ import type { HelmetServerState } from "react-helmet-async";
 import type { Page, PageProps } from "./types";
 
 export default function render(page: Page, props: PageProps) {
-  const markup = renderToStaticMarkup(createElement(page.default, props));
+  const markup = renderToStaticMarkup(
+    createElement(page.default, props)
+  ).replace(/<radish:noop><\/radish:noop>/g, "");
+
+  if (page.layout === false) return markup;
   return html(markup, page.head.helmet);
 }
 

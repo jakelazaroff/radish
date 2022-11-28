@@ -237,7 +237,8 @@ async function writePage(
   } else {
     // otherwise, just create the page
     const is404 = filepath.name === "404" && filepath.dir === root;
-    const shouldNest = !is404 && filepath.name !== "index";
+    const hasExt = path.extname(filepath.name) !== "";
+    const shouldNest = !is404 && !hasExt && filepath.name !== "index";
 
     const name = shouldNest ? "index" : filepath.name;
     const dir = shouldNest
@@ -252,7 +253,7 @@ async function writePage(
         websocket
       });
 
-      const output = path.join(dir, name + ".html");
+      const output = path.join(dir, hasExt ? name : `${name}.html`);
       await fs.promises.mkdir(dir, { recursive: true });
       await fs.promises.writeFile(output, html);
       results.push(fromSuccess(file.path, output));

@@ -36,6 +36,7 @@ export const pagePlugin = (options: PageOptions): Plugin => ({
         `    </Document>`,
         `  );`,
         `}`,
+        `export const layout = page.layout;`,
         `export const paths = page.paths;`,
         `export const head = Document.head;`
       ].join("\n");

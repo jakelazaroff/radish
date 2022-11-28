@@ -9,4 +9,5 @@ export interface Page {
   default: ComponentType<Props>;
   paths?(content: any): string[];
   head: { helmet: HelmetServerState };
+  layout?: boolean;
 }
