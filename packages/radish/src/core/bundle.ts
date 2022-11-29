@@ -1,5 +1,5 @@
 // sys
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as url from "node:url";
 import * as process from "node:process";
@@ -34,6 +34,7 @@ const __dirname = path.dirname(__filename);
 const CONTENT_DIR = "content";
 const PAGES_DIR = "pages";
 const ASSET_DIR = "public";
+const PUBLIC_DIR = "public";
 
 export interface BundleOptions {
   src: string;
@@ -50,12 +51,22 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
 
   const SRC = path.resolve(options.src);
   const DEST = path.resolve(options.dest);
-  const PUBLIC = options.public;
+  const PREFIX = options.public;
   const SERVICE_WORKER = Boolean(options.serviceWorker);
 
   const PAGES = path.join(SRC, PAGES_DIR);
   const CONTENT = path.join(SRC, CONTENT_DIR);
+  const PUBLIC = path.join(SRC, PUBLIC_DIR);
   const ASSETS = path.join(DEST, ASSET_DIR);
+
+  // copy public files
+  await fs.mkdir(ASSETS, { recursive: true });
+  const publicFiles = await globby(PUBLIC);
+  await Promise.all(
+    publicFiles.map(file =>
+      fs.copyFile(file, path.join(ASSETS, path.basename(file)))
+    )
+  );
 
   // bundle the pages and assets
   const pages = await globby([path.join(PAGES, "**/*{jsx,tsx}")]);
@@ -73,13 +84,13 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
       outbase: PAGES,
       format: "esm",
       inject: [path.resolve(__dirname, "inject.js")],
-      publicPath: PUBLIC,
+      publicPath: PREFIX,
       loader: loaders,
       plugins: [
         pagePlugin({ src: SRC }),
         contentPlugin({ src: CONTENT }),
-        cssPlugin({ src: SRC, dest: ASSETS, prefix: PUBLIC }),
-        jsPlugin({ dest: ASSETS, prefix: PUBLIC }),
+        cssPlugin({ src: SRC, dest: ASSETS, prefix: PREFIX }),
+        jsPlugin({ dest: ASSETS, prefix: PREFIX }),
         svgPlugin
       ],
 
@@ -100,7 +111,7 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
             content,
             buildDir: DEST,
             assetDir: ASSETS,
-            publicPath: PUBLIC,
+            publicPath: PREFIX,
             serviceWorker: SERVICE_WORKER,
             websocket: options.websocket
           });
@@ -125,12 +136,12 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
     content,
     buildDir: DEST,
     assetDir: ASSETS,
-    publicPath: PUBLIC,
+    publicPath: PREFIX,
     serviceWorker: SERVICE_WORKER,
     websocket: options.websocket
   });
   results.push(...renderResults);
-  const swResult = await buildServiceWorker(DEST, PUBLIC);
+  const swResult = await buildServiceWorker(DEST, PREFIX);
   results.push(swResult);
 
   const errors = results.filter(result => result.error);
@@ -164,20 +175,20 @@ async function writeFiles(files: OutputFile[], options: WriteOptions) {
     .map(file => ({ href: path.join(publicPath, file), as: "font" }));
 
   // create assets dir
-  await fs.promises.mkdir(assetDir, { recursive: true });
+  await fs.mkdir(assetDir, { recursive: true });
   const results = await Promise.all(
     files.map(async file => {
       const filepath = path.parse(file.path);
       if (filepath.ext !== ".js") {
         const output = path.join(assetDir, filepath.base);
-        await fs.promises.writeFile(output, file.contents);
+        await fs.writeFile(output, file.contents);
         return [fromSuccess(file.path, output)];
       }
 
       // bundled JS files are treated as assets
       if (/\.bundle-\w+\.js$/.test(filepath.base)) {
         const output = path.join(assetDir, filepath.base);
-        await fs.promises.writeFile(output, file.contents);
+        await fs.writeFile(output, file.contents);
         return [fromSuccess(file.path, output)];
       }
 
@@ -225,8 +236,8 @@ async function writePage(
           });
 
           const output = path.join(dir, "index.html");
-          await fs.promises.mkdir(dir, { recursive: true });
-          await fs.promises.writeFile(output, html);
+          await fs.mkdir(dir, { recursive: true });
+          await fs.writeFile(output, html);
           results.push(fromSuccess(file.path, output));
         } catch (e) {
           if (!(e instanceof Error)) throw e;
@@ -254,8 +265,8 @@ async function writePage(
       });
 
       const output = path.join(dir, hasExt ? name : `${name}.html`);
-      await fs.promises.mkdir(dir, { recursive: true });
-      await fs.promises.writeFile(output, html);
+      await fs.mkdir(dir, { recursive: true });
+      await fs.writeFile(output, html);
       results.push(fromSuccess(file.path, output));
     } catch (e) {
       if (!(e instanceof Error)) throw e;

@@ -13,7 +13,7 @@ interface Options {
 export const jsPlugin = (options: Options): Plugin => ({
   name: "js",
   setup(build) {
-    build.onLoad({ filter: /\.bundle\.[jt]s$/ }, async args => {
+    build.onLoad({ filter: /\.bundle\.[jt]sx?$/ }, async args => {
       const r = await esbuild.build({
         entryPoints: [args.path],
         entryNames: "[name]-[hash]",
