@@ -60,12 +60,13 @@ export async function bundle(options: BundleOptions): Promise<boolean> {
   const ASSETS = path.join(DEST, ASSET_DIR);
 
   // copy public files
-  await fs.mkdir(ASSETS, { recursive: true });
   const publicFiles = await globby(PUBLIC);
   await Promise.all(
-    publicFiles.map(file =>
-      fs.copyFile(file, path.join(ASSETS, path.basename(file)))
-    )
+    publicFiles.map(async file => {
+      const rel = path.relative(PUBLIC, file);
+      await fs.mkdir(path.join(ASSETS, path.dirname(rel)), { recursive: true });
+      fs.copyFile(file, path.join(ASSETS, rel));
+    })
   );
 
   // bundle the pages and assets
