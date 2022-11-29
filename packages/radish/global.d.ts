@@ -10,6 +10,16 @@ declare module "*.bundle.ts" {
   export default src;
 }
 
+declare module "*.bundle.jsx" {
+  const src: string;
+  export default src;
+}
+
+declare module "*.bundle.tsx" {
+  const src: string;
+  export default src;
+}
+
 // css
 
 declare module "*.module.css" {
