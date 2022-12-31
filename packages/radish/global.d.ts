@@ -82,7 +82,7 @@ declare module "*.svg" {
 
 declare module "*.react.svg" {
   import type { ComponentType } from "react";
-  const Component: ComponentType;
+  const Component: ComponentType<{ className?: string }>;
   export default Component;
 }
 
