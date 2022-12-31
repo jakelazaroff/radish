@@ -75,15 +75,15 @@ declare module "*.png" {
   export default src;
 }
 
-declare module "*.svg" {
-  const src: string;
-  export default src;
-}
-
 declare module "*.react.svg" {
   import type { ComponentType } from "react";
   const Component: ComponentType<{ className?: string }>;
   export default Component;
+}
+
+declare module "*.svg" {
+  const src: string;
+  export default src;
 }
 
 declare module "*.webp" {
