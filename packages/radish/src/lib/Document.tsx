@@ -28,7 +28,7 @@ export default function Document(props: Props) {
         <meta charSet="utf-8" />
         <link rel="stylesheet" href={style} />
         {preload.map((resource, i) => (
-          <link key={i} href={resource.href} as={resource.as} />
+          <link key={i} href={resource.href} as={resource.as} rel="preload" />
         ))}
         {serviceWorker ? <script>{sw}</script> : null}
         {websocket ? <script>{ws(websocket)}</script> : null}
