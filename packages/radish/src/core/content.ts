@@ -96,9 +96,7 @@ export const contentPlugin = (options: Options): Plugin => ({
             `content${joined} = { ...content${i}, Component: content${i}.default };`,
             `delete content${joined}.default;\n`
           );
-        } else {
-          src.push(`content${joined} = content${i}.default;`);
-        }
+        } else src.push(`content${joined} = content${i};`);
 
         // increment the counter
         i += 1;
