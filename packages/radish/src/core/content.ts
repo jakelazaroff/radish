@@ -7,9 +7,7 @@ import type { Plugin } from "esbuild";
 import { globby } from "globby";
 import grayMatter from "gray-matter";
 import { compile as compileMdx } from "@mdx-js/mdx";
-import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import rehypeHighlight from "rehype-highlight";
 import toml from "toml";
 import yaml from "js-yaml";
@@ -24,17 +22,20 @@ export interface ContentMap {
   [key: string]: unknown;
 }
 
-const cache = new Map<string, ContentMap>();
+/** A map from a content file's path to its contents. If the file was JSON, YAML or TOML, the value is a JavaScript object
+ * of the file converted into JSON and parsed; if it was Markdown, the value is the parsed front matter.
+ */
+const content = new Map<string, ContentMap>();
 
 export const contentMap = () => {
   const map: { [key: string]: any } = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  for (const [file, matter] of cache) {
+  for (const [file, matter] of content) {
     // split the path into an array of each segment
     const dirs = file.split(path.sep);
 
-    // set the front matter in the map at the nested path
-    // e.g. if the path is /blog/one, should be set at map["blog"]["one"]
+    // set the content in the map at the nested path
+    // e.g. if the path is /blog/one, the content should be set at map["blog"]["one"]
     let current = map;
     for (let i = 0; i < dirs.length; i++) {
       const dir = dirs[i];
@@ -122,7 +123,7 @@ export const contentPlugin = (options: Options): Plugin => ({
         options.src,
         path.join(filepath.dir, filepath.name)
       );
-      cache.set(key, json);
+      content.set(key, json);
 
       return {
         contents: compileDataFile(json),
@@ -140,7 +141,7 @@ export const contentPlugin = (options: Options): Plugin => ({
         options.src,
         path.join(filepath.dir, filepath.name)
       );
-      cache.set(key, json);
+      content.set(key, json);
 
       return {
         contents: compileDataFile(json),
@@ -158,7 +159,7 @@ export const contentPlugin = (options: Options): Plugin => ({
         options.src,
         path.join(filepath.dir, filepath.name)
       );
-      cache.set(key, json);
+      content.set(key, json);
 
       return {
         contents: compileDataFile(json),
@@ -177,14 +178,64 @@ export const contentPlugin = (options: Options): Plugin => ({
         options.src,
         path.join(filepath.dir, filepath.name)
       );
-      cache.set(key, grayMatter(md).data);
 
-      const file = await compileMdx(md, {
+      // parse as TOML if the delimiter is +++
+      let language: string | undefined;
+      const delimiters = md.substring(0, md.indexOf("\n")).trim();
+      if (delimiters === "+++") language = "toml";
+
+      // extract front matter from file
+      const matter = grayMatter(md, {
+        language,
+        delimiters,
+        engines: { toml: toml.parse.bind(toml) }
+      });
+
+      // set front matter in content map
+      content.set(key, matter.data);
+
+      // compile mdx
+      const file = await compileMdx(matter.content, {
         jsx: true,
         rehypePlugins: [rehypeHighlight],
-        remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm]
+        remarkPlugins: [remarkGfm]
       });
-      return { contents: file.value, loader: "jsx" };
+
+      // import stub mdjson file with front matter
+      const lines = file.value.toString().split("\n");
+      const from = path.join(filepath.dir, filepath.name + ".mdjson");
+      const imports = Object.keys(matter.data).join(", ");
+      lines.splice(
+        1,
+        0,
+        `import { ${imports} } from "${from}"`,
+        `export { ${imports} } from "${from}"`
+      );
+
+      // return compiled mdx as contents of file
+      return { contents: lines.join("\n"), loader: "jsx" };
+    });
+
+    build.onResolve({ filter: /\.mdjson$/ }, args => ({
+      path: args.path,
+      namespace: "mdjson"
+    }));
+
+    build.onLoad({ filter: /.*/, namespace: "mdjson" }, async args => {
+      const filepath = path.parse(args.path);
+      const key = path.relative(
+        options.src,
+        path.join(filepath.dir, filepath.name)
+      );
+
+      const matter = content.get(key);
+      if (!matter) return;
+
+      return {
+        contents: compileDataFile(matter),
+        loader: "js",
+        resolveDir: path.dirname(args.path)
+      };
     });
 
     build.onResolve({ filter: /^https?:\/\// }, args => ({
@@ -209,11 +260,11 @@ export const contentPlugin = (options: Options): Plugin => ({
 /** Given a plain JavaScript object, create source code that exports that object,
  * overwriting any properties in the form of `url("./somefile.png")` with the result of an actual esbuild import */
 function compileDataFile(obj: object) {
-  // expose the object as the default export
-  const src = [
-    `const data = ${JSON.stringify(obj)};`,
-    `export default data;\n`
-  ];
+  const src: string[] = [];
+
+  for (const [key, value] of Object.entries(obj)) {
+    src.push(`export let ${key} = ${JSON.stringify(value)};`);
+  }
 
   // get an index of key-value pairs in the form of [["path", "to", "value"], "value"]
   const index = indexObject(obj);
@@ -228,10 +279,13 @@ function compileDataFile(obj: object) {
     if (!url) continue;
 
     // overwrite the imported property in the data object
+    const first = path.shift();
+    if (!first) continue;
     const bracketed = path.map(key => `["${key}"]`).join("");
     src.push(
+      "",
       `import file${i} from "${url}";`,
-      `data${bracketed} = file${i};\n`
+      `${first}${bracketed} = file${i};`
     );
 
     i += 1;
